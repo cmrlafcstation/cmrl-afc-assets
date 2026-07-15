@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Asset - CMRL AFC Asset Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0d47a1;
+            --secondary-blue: #1565c0;
+            --light-bg: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            background-color: var(--primary-blue);
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar .logo {
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        .sidebar a.active {
+            background-color: var(--secondary-blue);
+            border-left: 4px solid #ffc107;
+            padding-left: 8px;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            padding: 30px;
+        }
+
+        .page-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            color: var(--primary-blue);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 8px 8px 0 0;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.2rem rgba(13, 71, 161, 0.25);
+        }
+
+        .form-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .conditional-field {
+            display: none;
+        }
+
+        .conditional-field.active {
+            display: block;
+        }
+
+        .field-section {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--secondary-blue);
+            color: white;
+        }
+
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-reset {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-reset:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .alert {
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .required {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+            }
+            .main-content {
+                margin-left: 150px;
+                padding: 15px;
+            }
+            .page-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h5><i class="fas fa-metro"></i> CMRL AFC</h5>
+            <small>Asset Management</small>
+        </div>
+        <a href="dashboard.html" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="asset_master.html" class="nav-link active"><i class="fas fa-plus-circle"></i> Add Asset</a>
+        <a href="search.html" class="nav-link"><i class="fas fa-search"></i> Search</a>
+        <a href="spare_movement.html" class="nav-link"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
+        <a href="spare_inventory.html" class="nav-link"><i class="fas fa-boxes"></i> Spare Inventory</a>
+        <a href="reports.html" class="nav-link"><i class="fas fa-file-alt"></i> Reports</a>
+        <a href="users.html" class="nav-link"><i class="fas fa-users"></i> Users</a>
+        <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-plus-circle"></i> Add New Asset</h1>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="successAlert" class="alert alert-success alert-dismissible fade" role="alert" style="display: none;">
+            <i class="fas fa-check-circle"></i>
+            <strong>Success!</strong> Asset has been added to <span id="sheetName"></span> sheet successfully.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div id="errorAlert" class="alert alert-danger alert-dismissible fade" role="alert" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <strong>Error!</strong> <span id="errorMessage"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Form -->
+        <form id="assetForm">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cog"></i> System & Equipment Type
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">System Type <span class="required">*</span></label>
+                            <select id="systemType" class="form-select" required>
+                                <option value="">-- Select System Type --</option>
+                                <option value="AG">AG (Automatic Gate)</option>
+                                <option value="NCMC">NCMC System</option>
+                                <option value="QR">QR System</option>
+                                <option value="PINELAB">Pinelab QR</option>
+                                <option value="TVM">TVM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Equipment Type <span class="required">*</span></label>
+                            <select id="equipmentType" class="form-select" required>
+                                <option value="">-- Select Equipment Type --</option>
+                            </select>
+                            <small class="form-text">Equipment types change based on system selection</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common Fields -->
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-info-circle"></i> Asset Information
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Asset ID <span class="required">*</span></label>
+                            <input type="text" id="assetId" class="form-control" required placeholder="e.g., AG001, NCMC001">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Station <span class="required">*</span></label>
+                            <select id="station" class="form-select" required>
+                                <option value="">-- Select Station --</option>
+                                <option value="SAP">AIRPORT</option>
+                                <option value="SME">MEENAMBAKKAM</option>
+                                <option value="SOT">NANGANALLUR</option>
+                                <option value="SAL">ARIGNAR ANNA ALANDUR METR</option>
+                                <option value="SGU">GUINDY</option>
+                                <option value="SLM">LITTLE MOUNT</option>
+                                <option value="SSA">SAIDAPET</option>
+                                <option value="SCR">NANDANAM</option>
+                                <option value="STE">THENAMPET</option>
+                                <option value="SGM">AG DMS</option>
+                                <option value="STL">THOUSAND LIGHT</option>
+                                <option value="SLI">LIC</option>
+                                <option value="SGE">GOVERNMENT ESTATE</option>
+                                <option value="SCC">THALAIVAR DR.M.G.RAMACHANDRA N CENTRAL METRO</option>
+                                <option value="SHC">HIGH COURT</option>
+                                <option value="SMA">MANNADI</option>
+                                <option value="SWA">WASHERMENPET</option>
+                                <option value="STC">Thyagaraya College</option>
+                                <option value="STR">Tondiarpet</option>
+                                <option value="SNW">New Washermen pet</option>
+                                <option value="STG">Toll Gat</option>
+                                <option value="SKP">Kaladipet</option>
+                                <option value="STT">Thiruvotriyur Theredi</option>
+                                <option value="STV">Thiruvotriyur</option>
+                                <option value="SWN">WimcoNagar</option>
+                                <option value="SWD">WimcoNagar Depot</option>
+                                <option value="SSI">EKKATTUTHANGAL</option>
+                                <option value="SAN">ASHOK NAGAR</option>
+                                <option value="SVA">VADAPALANI</option>
+                                <option value="SAR">ARUMBAKKAM</option>
+                                <option value="SCM">PURATCHI THALAIVI DR.J.JAYALALITHA CMBT METRO</option>
+                                <option value="SKO">KOYAMBEDU</option>
+                                <option value="STI">THIRUMANGALAM</option>
+                                <option value="SAT">ANNA NAGAR TOWER</option>
+                                <option value="SAE">ANNA NAGAR EAST</option>
+                                <option value="SSN">SHENOY NAGAR</option>
+                                <option value="SPC">PACHIAPPAS COLLEGE</option>
+                                <option value="SKM">KILPAUK</option>
+                                <option value="SNP">NEHRU PARK</option>
+                                <option value="SEG">EGMORE</option>
+                                <option value="SMM">ST. THOMAS MOUNT</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Serial Number</label>
+                            <input type="text" id="serialNumber" class="form-control" placeholder="e.g., SN-2026-001">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Status</label>
+                            <select id="status" class="form-select">
+                                <option value="">-- Select Status --</option>
+                                <option value="ACTIVE">Active</option>
+                                <option value="INACTIVE">Inactive</option>
+                                <option value="MAINTENANCE">Maintenance</option>
+                                <option value="DECOMMISSIONED">Decommissioned</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Condition</label>
+                            <select id="condition" class="form-select">
+                                <option value="">-- Select Condition --</option>
+                                <option value="EXCELLENT">Excellent</option>
+                                <option value="GOOD">Good</option>
+                                <option value="FAIR">Fair</option>
+                                <option value="POOR">Poor</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Install Date</label>
+                            <input type="date" id="installDate" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AG Specific Fields -->
+            <div id="agSection" class="card" style="display: none;">
+                <div class="card-header">
+                    <i class="fas fa-door-open"></i> AG Specific Details
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Device ID</label>
+                            <input type="text" id="deviceId" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Direction</label>
+                            <select id="direction" class="form-select">
+                                <option value="">-- Select Direction --</option>
+                                <option value="ENTRY">Entry</option>
+                                <option value="EXIT">Exit</option>
+                                <option value="BI-DIRECTION">Bi-Direction</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Entry Scanner -->
+                    <div class="field-section">
+                        <label class="form-label"><strong>Entry SCANNER</strong></label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="entryScannerYes" name="entryScanner" value="YES">
+                            <label class="form-check-label" for="entryScannerYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="entryScannerNo" name="entryScanner" value="NO">
+                            <label class="form-check-label" for="entryScannerNo">No</label>
+                        </div>
+                        <div id="entryScannerIdField" class="conditional-field mt-2">
+                            <label class="form-label">Scanner ID</label>
+                            <input type="text" id="entryScannerID" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Exit Scanner -->
+                    <div class="field-section">
+                        <label class="form-label"><strong>Exit SCANNER</strong></label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="exitScannerYes" name="exitScanner" value="YES">
+                            <label class="form-check-label" for="exitScannerYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="exitScannerNo" name="exitScanner" value="NO">
+                            <label class="form-check-label" for="exitScannerNo">No</label>
+                        </div>
+                        <div id="exitScannerIdField" class="conditional-field mt-2">
+                            <label class="form-label">Scanner ID</label>
+                            <input type="text" id="exitScannerID" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Entry Reader -->
+                    <div class="field-section">
+                        <label class="form-label"><strong>Entry Reader</strong></label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="entryReaderYes" name="entryReader" value="YES">
+                            <label class="form-check-label" for="entryReaderYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="entryReaderNo" name="entryReader" value="NO">
+                            <label class="form-check-label" for="entryReaderNo">No</label>
+                        </div>
+                        <div id="entryReaderIdField" class="conditional-field mt-2">
+                            <label class="form-label">Reader ID</label>
+                            <input type="text" id="entryReaderID" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Exit Reader -->
+                    <div class="field-section">
+                        <label class="form-label"><strong>Exit Reader</strong></label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="exitReaderYes" name="exitReader" value="YES">
+                            <label class="form-check-label" for="exitReaderYes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="exitReaderNo" name="exitReader" value="NO">
+                            <label class="form-check-label" for="exitReaderNo">No</label>
+                        </div>
+                        <div id="exitReaderIdField" class="conditional-field mt-2">
+                            <label class="form-label">Reader ID</label>
+                            <input type="text" id="exitReaderID" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Wide / Normal</label>
+                            <select id="wideNormal" class="form-select">
+                                <option value="">-- Select --</option>
+                                <option value="WIDE">Wide</option>
+                                <option value="NORMAL">Normal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">New / Old</label>
+                            <select id="newOld" class="form-select">
+                                <option value="">-- Select --</option>
+                                <option value="NEW">New</option>
+                                <option value="OLD">Old</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">AG Remark</label>
+                            <textarea id="remarks" class="form-control" rows="3" placeholder="Enter any additional remarks..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipment Details (for non-AG systems) -->
+            <div id="equipmentDetailsSection" class="card" style="display: none;">
+                <div class="card-header">
+                    <i class="fas fa-box"></i> Equipment Details
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Equipment Name</label>
+                            <input type="text" id="equipmentName" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Manufacturer</label>
+                            <input type="text" id="manufacturer" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Model</label>
+                            <input type="text" id="model" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea id="generalRemarks" class="form-control" rows="3" placeholder="Enter any additional remarks..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Buttons -->
+            <div class="form-buttons">
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fas fa-save"></i> Save Asset
+                </button>
+                <button type="reset" class="btn-reset">
+                    <i class="fas fa-redo"></i> Clear Form
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec';
+
+        // Equipment types by system
+        const equipmentTypes = {
+            'AG': ['Automatic Gate'],
+            'NCMC': ['Printer', 'EDC Device', 'EDC Device Base', 'POS Device', 
+                     'POS Device and Base', 'Ticket Reader', 'Cash Counter', 'Barcode Scanner',
+                     'Passenger Display Unit', 'Charger adapter', 'Counter Communication Set',
+                     'Adapter', 'Charger', 'Other'],
+            'QR': ['Touch Display', 'QR Printer', 'QR Scanner', 'Cash Counter',
+                   'Adapter', 'Charger', 'Other'],
+            'PINELAB': ['POS Device', 'EDC Device', 'Charger', 'Adapter', 'Other'],
+            'TVM': ['Ticket Vending Machine', 'Card Reader', 'Coin Acceptor', 'Note Acceptor',
+                    'Thermal Printer', 'Display', 'Charger', 'Adapter', 'Other']
+        };
+
+        // Sheet mapping
+        const sheetMapping = {
+            'AG': 'AG',
+            'NCMC': 'NCMC system',
+            'QR': 'QR system',
+            'PINELAB': 'Pinelab QR',
+            'TVM': 'TVM'
+        };
+
+        // Handle system type change
+        document.getElementById('systemType').addEventListener('change', function() {
+            const systemType = this.value;
+            const equipmentTypeSelect = document.getElementById('equipmentType');
+            const agSection = document.getElementById('agSection');
+            const equipmentDetailsSection = document.getElementById('equipmentDetailsSection');
+
+            // Clear and hide sections
+            equipmentTypeSelect.innerHTML = '<option value="">-- Select Equipment Type --</option>';
+            agSection.style.display = 'none';
+            equipmentDetailsSection.style.display = 'none';
+
+            if (systemType && equipmentTypes[systemType]) {
+                // Populate equipment types for selected system
+                equipmentTypes[systemType].forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type;
+                    option.textContent = type;
+                    equipmentTypeSelect.appendChild(option);
+                });
+
+                // Show appropriate section
+                if (systemType === 'AG') {
+                    agSection.style.display = 'block';
+                } else {
+                    equipmentDetailsSection.style.display = 'block';
+                }
+            }
+        });
+
+        // Setup conditional fields for AG scanners/readers
+        function setupConditionalFields() {
+            // Entry Scanner
+            ['entryScannerYes', 'entryScannerNo'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    const field = document.getElementById('entryScannerIdField');
+                    field.classList.toggle('active', this.value === 'YES');
+                });
+            });
+
+            // Exit Scanner
+            ['exitScannerYes', 'exitScannerNo'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    const field = document.getElementById('exitScannerIdField');
+                    field.classList.toggle('active', this.value === 'YES');
+                });
+            });
+
+            // Entry Reader
+            ['entryReaderYes', 'entryReaderNo'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    const field = document.getElementById('entryReaderIdField');
+                    field.classList.toggle('active', this.value === 'YES');
+                });
+            });
+
+            // Exit Reader
+            ['exitReaderYes', 'exitReaderNo'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    const field = document.getElementById('exitReaderIdField');
+                    field.classList.toggle('active', this.value === 'YES');
+                });
+            });
+        }
+
+        setupConditionalFields();
+
+        // Form submission
+        document.getElementById('assetForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const systemType = document.getElementById('systemType').value;
+            if (!systemType) {
+                showError('Please select a system type');
+                return;
+            }
+
+            const equipmentType = document.getElementById('equipmentType').value;
+            if (!equipmentType) {
+                showError('Please select an equipment type');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            try {
+                // Prepare data based on system type
+                const formData = {
+                    action: 'add',
+                    systemType: systemType,
+                    assetId: document.getElementById('assetId').value,
+                    equipmentType: equipmentType,
+                    serialNumber: document.getElementById('serialNumber').value || '',
+                    station: document.getElementById('station').value,
+                    status: document.getElementById('status').value || '',
+                    condition: document.getElementById('condition').value || '',
+                    installDate: document.getElementById('installDate').value || ''
+                };
+
+                if (systemType === 'AG') {
+                    formData.deviceId = document.getElementById('deviceId').value || '';
+                    formData.direction = document.getElementById('direction').value || '';
+                    formData.entryScanner = document.querySelector('input[name="entryScanner"]:checked')?.value || '';
+                    formData.entryScannerID = document.getElementById('entryScannerID').value || '';
+                    formData.exitScanner = document.querySelector('input[name="exitScanner"]:checked')?.value || '';
+                    formData.exitScannerID = document.getElementById('exitScannerID').value || '';
+                    formData.entryReader = document.querySelector('input[name="entryReader"]:checked')?.value || '';
+                    formData.entryReaderID = document.getElementById('entryReaderID').value || '';
+                    formData.exitReader = document.querySelector('input[name="exitReader"]:checked')?.value || '';
+                    formData.exitReaderID = document.getElementById('exitReaderID').value || '';
+                    formData.wideNormal = document.getElementById('wideNormal').value || '';
+                    formData.newOld = document.getElementById('newOld').value || '';
+                    formData.remark = document.getElementById('remarks').value || '';
+                } else {
+                    formData.equipmentName = document.getElementById('equipmentName').value || '';
+                    formData.manufacturer = document.getElementById('manufacturer').value || '';
+                    formData.model = document.getElementById('model').value || '';
+                    formData.remarks = document.getElementById('generalRemarks').value || '';
+                }
+
+                // Send to Google Apps Script
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccess(systemType);
+                    document.getElementById('assetForm').reset();
+                    document.getElementById('equipmentType').innerHTML = '<option value="">-- Select Equipment Type --</option>';
+                    document.getElementById('agSection').style.display = 'none';
+                    document.getElementById('equipmentDetailsSection').style.display = 'none';
+
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    showError(data.error || 'Failed to save asset');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('An error occurred. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Asset';
+            }
+        });
+
+        // Show success message
+        function showSuccess(systemType) {
+            const alert = document.getElementById('successAlert');
+            document.getElementById('sheetName').textContent = sheetMapping[systemType] || systemType;
+            alert.style.display = 'block';
+            alert.classList.add('show');
+        }
+
+        // Show error message
+        function showError(message) {
+            const alert = document.getElementById('errorAlert');
+            document.getElementById('errorMessage').textContent = message;
+            alert.style.display = 'block';
+            alert.classList.add('show');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CMRL AFC Asset Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0d47a1;
+            --secondary-blue: #1565c0;
+            --light-bg: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            background-color: var(--primary-blue);
+            color: white;
+            height: 100vh;
+            padding: 20px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar .logo {
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        .sidebar a.active {
+            background-color: var(--secondary-blue);
+            border-left: 4px solid #ffc107;
+            padding-left: 8px;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            padding: 30px;
+        }
+
+        .page-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            color: var(--primary-blue);
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .refresh-info {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .stat-card.ag {
+            border-left-color: #0c5460;
+        }
+
+        .stat-card.ncmc {
+            border-left-color: #155724;
+        }
+
+        .stat-card.qr {
+            border-left-color: #856404;
+        }
+
+        .stat-card.pinelab {
+            border-left-color: #721c24;
+        }
+
+        .stat-card.tvm {
+            border-left-color: #004085;
+        }
+
+        .stat-card.warning {
+            border-left-color: #ff6b6b;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .stat-subtitle {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 10px;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 8px 8px 0 0;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            background-color: white;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        table thead {
+            background-color: #f5f5f5;
+        }
+
+        table th {
+            color: var(--primary-blue);
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        table tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .badge-system {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .badge-ag {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .badge-ncmc {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-qr {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-pinelab {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-tvm {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .progress-bar {
+            background-color: var(--primary-blue);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+            }
+            .main-content {
+                margin-left: 150px;
+                padding: 15px;
+            }
+            .page-title {
+                font-size: 20px;
+            }
+            .stat-value {
+                font-size: 28px;
+            }
+            .page-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h5><i class="fas fa-metro"></i> CMRL AFC</h5>
+            <small>Asset Management</small>
+        </div>
+        <a href="dashboard.html" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="asset_master.html" class="nav-link"><i class="fas fa-plus-circle"></i> Add Asset</a>
+        <a href="search.html" class="nav-link"><i class="fas fa-search"></i> Search</a>
+        <a href="spare_movement.html" class="nav-link"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
+        <a href="spare_inventory.html" class="nav-link"><i class="fas fa-boxes"></i> Spare Inventory</a>
+        <a href="reports.html" class="nav-link"><i class="fas fa-file-alt"></i> Reports</a>
+        <a href="users.html" class="nav-link"><i class="fas fa-users"></i> Users</a>
+        <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title"><i class="fas fa-chart-line"></i> Dashboard</h1>
+                <small class="refresh-info">Auto-refreshing every 30 seconds</small>
+            </div>
+            <div>
+                <button class="btn btn-primary btn-sm" onclick="loadDashboard()">
+                    <i class="fas fa-sync-alt"></i> Refresh Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid" id="statsContainer">
+            <div class="stat-card">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row" id="chartsContainer" style="display: none;">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-pie-chart"></i> Assets by System Type
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="systemTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-map-marker-alt"></i> Top 5 Stations
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="topStationsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Assets -->
+        <div class="card" id="recentAssetsContainer" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-clock"></i> Recent Assets (Last 10)
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="recentTable">
+                        <thead>
+                            <tr>
+                                <th>Asset ID</th>
+                                <th>System</th>
+                                <th>Equipment Type</th>
+                                <th>Station</th>
+                                <th>Status</th>
+                                <th>Added</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec';
+
+        let systemTypeChart = null;
+        let topStationsChart = null;
+        let allAssets = [];
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getAll');
+                const data = await response.json();
+                allAssets = data.data || [];
+
+                calculateStats();
+                displayCharts();
+                displayRecentAssets();
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Calculate statistics
+        function calculateStats() {
+            const totalAssets = allAssets.length;
+            const agAssets = allAssets.filter(a => a.systemType === 'AG').length;
+            const ncmcAssets = allAssets.filter(a => a.systemType === 'NCMC').length;
+            const qrAssets = allAssets.filter(a => a.systemType === 'QR').length;
+            const pinelabAssets = allAssets.filter(a => a.systemType === 'PINELAB').length;
+            const tvmAssets = allAssets.filter(a => a.systemType === 'TVM').length;
+            const maintenanceAssets = allAssets.filter(a => a.status === 'MAINTENANCE').length;
+            const inactiveAssets = allAssets.filter(a => a.status === 'INACTIVE').length;
+            const activeAssets = allAssets.filter(a => a.status === 'ACTIVE').length;
+
+            const statsHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-cubes"></i></div>
+                    <div class="stat-label">Total Assets</div>
+                    <div class="stat-value">${totalAssets}</div>
+                    <div class="stat-subtitle">Across all systems</div>
+                </div>
+
+                <div class="stat-card ag">
+                    <div class="stat-icon"><i class="fas fa-door-open"></i></div>
+                    <div class="stat-label">AG Systems</div>
+                    <div class="stat-value">${agAssets}</div>
+                    <div class="stat-subtitle">Automatic Gates</div>
+                </div>
+
+                <div class="stat-card ncmc">
+                    <div class="stat-icon"><i class="fas fa-id-card"></i></div>
+                    <div class="stat-label">NCMC Systems</div>
+                    <div class="stat-value">${ncmcAssets}</div>
+                    <div class="stat-subtitle">NCMC Equipment</div>
+                </div>
+
+                <div class="stat-card qr">
+                    <div class="stat-icon"><i class="fas fa-qrcode"></i></div>
+                    <div class="stat-label">QR Systems</div>
+                    <div class="stat-value">${qrAssets}</div>
+                    <div class="stat-subtitle">QR Equipment</div>
+                </div>
+
+                <div class="stat-card pinelab">
+                    <div class="stat-icon"><i class="fas fa-credit-card"></i></div>
+                    <div class="stat-label">Pinelab Systems</div>
+                    <div class="stat-value">${pinelabAssets}</div>
+                    <div class="stat-subtitle">Pinelab Equipment</div>
+                </div>
+
+                <div class="stat-card tvm">
+                    <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
+                    <div class="stat-label">TVM Systems</div>
+                    <div class="stat-value">${tvmAssets}</div>
+                    <div class="stat-subtitle">Ticket Vending Machines</div>
+                </div>
+
+                <div class="stat-card" style="border-left-color: #28a745;">
+                    <div class="stat-icon" style="color: #28a745;"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-label">Active Assets</div>
+                    <div class="stat-value" style="color: #28a745;">${activeAssets}</div>
+                    <div class="stat-subtitle">Currently operational</div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-icon" style="color: #ff6b6b;"><i class="fas fa-tools"></i></div>
+                    <div class="stat-label">In Maintenance</div>
+                    <div class="stat-value" style="color: #ff6b6b;">${maintenanceAssets}</div>
+                    <div class="stat-subtitle">Under repair/maintenance</div>
+                </div>
+
+                <div class="stat-card warning">
+                    <div class="stat-icon" style="color: #ffc107;"><i class="fas fa-pause-circle"></i></div>
+                    <div class="stat-label">Inactive Assets</div>
+                    <div class="stat-value" style="color: #ffc107;">${inactiveAssets}</div>
+                    <div class="stat-subtitle">Not in use</div>
+                </div>
+            `;
+
+            document.getElementById('statsContainer').innerHTML = statsHTML;
+            document.getElementById('chartsContainer').style.display = 'flex';
+            document.getElementById('recentAssetsContainer').style.display = 'block';
+        }
+
+        // Display charts
+        function displayCharts() {
+            displaySystemTypeChart();
+            displayTopStationsChart();
+        }
+
+        // System Type Chart
+        function displaySystemTypeChart() {
+            const systemCounts = {
+                'AG': allAssets.filter(a => a.systemType === 'AG').length,
+                'NCMC': allAssets.filter(a => a.systemType === 'NCMC').length,
+                'QR': allAssets.filter(a => a.systemType === 'QR').length,
+                'PINELAB': allAssets.filter(a => a.systemType === 'PINELAB').length,
+                'TVM': allAssets.filter(a => a.systemType === 'TVM').length
+            };
+
+            const ctx = document.getElementById('systemTypeChart').getContext('2d');
+            
+            if (systemTypeChart) {
+                systemTypeChart.destroy();
+            }
+
+            systemTypeChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(systemCounts),
+                    datasets: [{
+                        data: Object.values(systemCounts),
+                        backgroundColor: [
+                            '#0c5460',
+                            '#155724',
+                            '#856404',
+                            '#721c24',
+                            '#004085'
+                        ],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Top 5 Stations Chart
+        function displayTopStationsChart() {
+            const stationCounts = {};
+            allAssets.forEach(asset => {
+                const station = asset.station || 'Unknown';
+                stationCounts[station] = (stationCounts[station] || 0) + 1;
+            });
+
+            // Get top 5 stations
+            const topStations = Object.entries(stationCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+                .reduce((obj, [key, val]) => { obj[key] = val; return obj; }, {});
+
+            const ctx = document.getElementById('topStationsChart').getContext('2d');
+            
+            if (topStationsChart) {
+                topStationsChart.destroy();
+            }
+
+            topStationsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(topStations),
+                    datasets: [{
+                        label: 'Number of Assets',
+                        data: Object.values(topStations),
+                        backgroundColor: '#0d47a1',
+                        borderColor: '#0d47a1',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Display recent assets
+        function displayRecentAssets() {
+            // Sort by timestamp (newest first)
+            const recent = allAssets
+                .sort((a, b) => {
+                    const timeA = new Date(a.timestamp || 0);
+                    const timeB = new Date(b.timestamp || 0);
+                    return timeB - timeA;
+                })
+                .slice(0, 10);
+
+            let html = '';
+            recent.forEach(asset => {
+                const systemBadgeClass = `badge-${asset.systemType.toLowerCase()}`;
+                const statusClass = asset.status === 'ACTIVE' ? 'success' : 'danger';
+                const timeAgo = formatTimeAgo(new Date(asset.timestamp || 0));
+
+                html += `
+                    <tr>
+                        <td><strong>${asset.assetId || 'N/A'}</strong></td>
+                        <td><span class="badge-system ${systemBadgeClass}">${asset.systemType || 'N/A'}</span></td>
+                        <td>${asset.equipmentType || 'N/A'}</td>
+                        <td>${asset.station || 'N/A'}</td>
+                        <td><span class="badge bg-${statusClass}">${asset.status || 'N/A'}</span></td>
+                        <td><small>${timeAgo}</small></td>
+                    </tr>
+                `;
+            });
+
+            if (recent.length === 0) {
+                html = '<tr><td colspan="6" class="text-center text-muted">No assets yet</td></tr>';
+            }
+
+            document.getElementById('recentTableBody').innerHTML = html;
+        }
+
+        // Format time ago
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            if (seconds < 60) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        // Load dashboard on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboard();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(loadDashboard, 30000);
+        });
+    </script>
+</body>
+</html>
