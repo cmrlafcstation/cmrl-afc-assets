@@ -3,75 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CMRL AFC Asset Management System</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom Style Sheet -->
-    <<link rel="stylesheet" href="css/style.css">
+    <title>CMRL AFC Asset Management - Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue:#0d47a1;
+            --secondary-blue:#1565c0;
+        }
+
+        * { box-sizing:border-box; }
+
+        body {
+            min-height:100vh;
+            margin:0;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;
+            background:
+                linear-gradient(rgba(13,71,161,.82),rgba(21,101,192,.82)),
+                radial-gradient(circle at top left,#5b9bd5,#0d47a1);
+        }
+
+        .login-card {
+            width:min(430px,100%);
+            overflow:hidden;
+            background:#fff;
+            border-radius:14px;
+            box-shadow:0 24px 65px rgba(0,0,0,.28);
+        }
+
+        .login-header {
+            padding:30px 28px 24px;
+            text-align:center;
+            color:#fff;
+            background:linear-gradient(135deg,var(--primary-blue),var(--secondary-blue));
+        }
+
+        .login-header i { font-size:42px; margin-bottom:12px; }
+        .login-header h1 { margin:0; font-size:24px; font-weight:700; }
+        .login-header p { margin:6px 0 0; opacity:.85; font-size:13px; }
+
+        .login-body { padding:28px; }
+        .form-label { color:var(--primary-blue); font-weight:600; }
+        .form-control {
+            min-height:46px;
+            border-radius:7px;
+        }
+
+        .password-wrap { position:relative; }
+        .password-toggle {
+            position:absolute;
+            right:12px;
+            top:50%;
+            transform:translateY(-50%);
+            border:0;
+            background:transparent;
+            color:#666;
+        }
+
+        .btn-login {
+            width:100%;
+            min-height:47px;
+            border:0;
+            border-radius:7px;
+            color:#fff;
+            background:linear-gradient(135deg,var(--primary-blue),var(--secondary-blue));
+            font-weight:700;
+        }
+
+        .login-footer {
+            padding:14px 25px;
+            text-align:center;
+            color:#777;
+            background:#f7f8fa;
+            font-size:12px;
+        }
+    </style>
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
-                
-                <!-- Centralized Branding Frame Header -->
-                <div class="text-center mb-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-primary-cmrl text-white rounded-circle p-3 mb-3 shadow" style="width: 80px; height: 80px;">
-                        <i class="fa-solid fa-train fa-2xl"></i>
-                    </div>
-                    <h3 class="fw-bold text-dark mb-1">CMRL AFC</h3>
-                    <p class="text-muted small text-uppercase tracking-wider">Asset Management System</p>
-                </div>
-
-                <!-- Secure Authentication Card Block -->
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                    <div class="bg-active-cmrl text-white text-center py-3 fw-medium">
-                        <i class="fa-solid fa-shield-halved me-2"></i>Operator Portal Sign-In
-                    </div>
-                    
-                    <div class="card-body bg-white p-4">
-                        <form id="loginForm" action="pages/dashboard.html" method="GET">
-                            
-                            <!-- Email Input -->
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-muted" for="loginEmail">Email Address</label>
-                                <div class="position-relative">
-                                    <input type="email" class="form-control ps-5 py-2.5 border-light-subtle" id="loginEmail" placeholder="username@cmrl.in" required>
-                                    <i class="fa-solid fa-envelope position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                                </div>
-                            </div>
-
-                            <!-- Password Input -->
-                            <div class="mb-4">
-                                <label class="form-label small fw-bold text-muted" for="loginPassword">Password</label>
-                                <div class="position-relative">
-                                    <input type="password" class="form-control ps-5 py-2.5 border-light-subtle" id="loginPassword" placeholder="••••••••" required>
-                                    <i class="fa-solid fa-lock position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-                                </div>
-                            </div>
-
-                            <!-- Redirects to pages/dashboard.html on click -->
-                            <button type="submit" class="btn btn-primary w-100 py-2.5 fw-medium bg-primary-cmrl border-0 transition-all shadow-sm">
-                                Verify & Access System
-                            </button>
-                        </form>
-                    </div>
-                    
-                    <!-- Footer Info Notice -->
-                    <div class="card-footer bg-light border-0 py-3 text-center">
-                        <span class="text-muted small"><i class="fa-solid fa-circle-info me-1"></i> Authorized Personnel Access Only</span>
-                    </div>
-                </div>
-
-            </div>
+<body>
+    <section class="login-card">
+        <div class="login-header">
+            <i class="fas fa-metro"></i>
+            <h1>CMRL AFC</h1>
+            <p>Asset Management System</p>
         </div>
-    </div>
 
-    <!-- Bootstrap Bundle JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/app.js"></script>
+        <div class="login-body">
+            <div id="messageBox"></div>
+
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label">User ID or Email</label>
+                    <input id="loginId" class="form-control" required autocomplete="username"
+                           placeholder="Enter User ID or email">
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <div class="password-wrap">
+                        <input id="password" type="password" class="form-control"
+                               required autocomplete="current-password"
+                               placeholder="Enter password">
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i id="passwordIcon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="loginBtn" type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
+        </div>
+
+        <div class="login-footer">
+            Authorized CMRL AFC users only
+        </div>
+    </section>
+
+    <script>
+        "use strict";
+
+        const GOOGLE_SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec";
+
+        const $ = id => document.getElementById(id);
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g,"&amp;")
+                .replace(/</g,"&lt;")
+                .replace(/>/g,"&gt;")
+                .replace(/"/g,"&quot;")
+                .replace(/'/g,"&#039;");
+        }
+
+        function showMessage(type,message) {
+            $("messageBox").innerHTML = `
+                <div class="alert alert-${type}">
+                    ${escapeHtml(message)}
+                </div>`;
+        }
+
+        function togglePassword() {
+            const input = $("password");
+            const icon = $("passwordIcon");
+            const showing = input.type === "text";
+
+            input.type = showing ? "password" : "text";
+            icon.className = showing ? "fas fa-eye" : "fas fa-eye-slash";
+        }
+
+        $("loginForm").addEventListener("submit", async event => {
+            event.preventDefault();
+
+            try {
+                $("loginBtn").disabled = true;
+                $("loginBtn").innerHTML =
+                    '<i class="fas fa-spinner fa-spin"></i> Logging in';
+
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method:"POST",
+                    redirect:"follow",
+                    headers:{"Content-Type":"text/plain;charset=utf-8"},
+                    body:JSON.stringify({
+                        action:"login",
+                        loginId:$("loginId").value.trim(),
+                        password:$("password").value
+                    })
+                });
+
+                const text = await response.text();
+                let result;
+
+                try { result = JSON.parse(text); }
+                catch { throw new Error("Invalid Apps Script response. Deploy the latest backend."); }
+
+                if (!result.success) {
+                    throw new Error(result.error || "Login failed.");
+                }
+
+                localStorage.setItem("afc_auth_token", result.data.token);
+                localStorage.setItem("afc_auth_user", JSON.stringify(result.data.user));
+
+                const params = new URLSearchParams(location.search);
+                let returnPage = params.get("return") || "pages/dashboard.html";
+
+                // A return path beginning with / belongs to this Live Server project.
+                if (returnPage.startsWith("/")) {
+                    returnPage = returnPage.replace(/^\/+/, "");
+                }
+
+                // Avoid redirecting back to the login page.
+                if (!returnPage || returnPage.endsWith("index.html")) {
+                    returnPage = "pages/dashboard.html";
+                }
+                location.href = returnPage;
+            } catch (error) {
+                showMessage("danger", error.message || "Unable to login.");
+            } finally {
+                $("loginBtn").disabled = false;
+                $("loginBtn").innerHTML =
+                    '<i class="fas fa-sign-in-alt"></i> Login';
+            }
+        });
+
+        // Redirect an already logged-in user.
+        document.addEventListener("DOMContentLoaded", async () => {
+            const token = localStorage.getItem("afc_auth_token");
+            if (!token) return;
+
+            const url = new URL(GOOGLE_SCRIPT_URL);
+            url.searchParams.set("action","verifySession");
+            url.searchParams.set("token",token);
+
+            try {
+                const response = await fetch(url.toString());
+                const result = await response.json();
+
+                if (result.success) {
+                    location.href = "pages/dashboard.html";
+                }
+            } catch {}
+        });
+    </script>
 </body>
 </html>
