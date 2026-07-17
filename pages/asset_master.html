@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +13,16 @@
             --light-bg: #f5f5f5;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--light-bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
 
         .sidebar {
@@ -27,9 +33,10 @@
             position: fixed;
             left: 0;
             top: 0;
-            width: 200px;
+            width: 220px;
             overflow-y: auto;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
 
         .sidebar .logo {
@@ -39,37 +46,60 @@
             padding-bottom: 15px;
         }
 
-        .sidebar a {
+        .sidebar .logo h5 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .sidebar .logo small {
             display: block;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
             color: white;
             text-decoration: none;
             margin: 15px 0;
-            padding: 12px;
+            padding: 12px 15px;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
         }
 
         .sidebar a:hover {
             background-color: var(--secondary-blue);
+            transform: translateX(5px);
         }
 
         .sidebar a.active {
             background-color: var(--secondary-blue);
             border-left: 4px solid #ffc107;
-            padding-left: 8px;
+            padding-left: 11px;
         }
 
         .main-content {
-            margin-left: 200px;
+            margin-left: 220px;
             padding: 30px;
+            width: calc(100% - 220px);
+            min-height: 100vh;
         }
 
         .page-header {
             background-color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             margin-bottom: 30px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-blue);
         }
 
         .page-title {
@@ -79,92 +109,155 @@
             margin: 0;
         }
 
+        .page-subtitle {
+            color: #999;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
         .card {
             border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .card-header {
-            background-color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
             border-radius: 8px 8px 0 0;
             padding: 20px;
             font-weight: 600;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        .form-section-title {
             font-size: 16px;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: none;
+        }
+
+        .card-header i {
+            margin-right: 10px;
+        }
+
+        .card-body {
+            padding: 25px;
         }
 
         .form-label {
             font-weight: 600;
             color: var(--primary-blue);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
         }
 
         .form-control, .form-select {
-            border-radius: 5px;
+            border-radius: 6px;
             border: 1px solid #ddd;
             padding: 10px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus, .form-select:focus {
             border-color: var(--primary-blue);
-            box-shadow: 0 0 0 0.2rem rgba(13, 71, 161, 0.25);
+            box-shadow: 0 0 0 0.2rem rgba(13, 71, 161, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: #bbb;
         }
 
         .form-text {
             font-size: 12px;
             color: #999;
             margin-top: 5px;
+            display: block;
         }
 
         .conditional-field {
             display: none;
+            animation: slideDown 0.3s ease;
         }
 
         .conditional-field.active {
             display: block;
         }
 
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .field-section {
             padding: 15px;
             background-color: #f9f9f9;
-            border-radius: 5px;
+            border-radius: 6px;
             margin-bottom: 20px;
+            border-left: 3px solid var(--primary-blue);
+        }
+
+        .field-section-title {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .form-check {
+            margin: 10px 0;
+        }
+
+        .form-check-label {
+            font-weight: 500;
+            color: #333;
+            margin-left: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .form-check-input {
+            cursor: pointer;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
         }
 
         .btn-submit {
-            background-color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
             border: none;
             padding: 12px 40px;
-            border-radius: 5px;
+            border-radius: 6px;
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn-submit:hover {
-            background-color: var(--secondary-blue);
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(13, 71, 161, 0.3);
             color: white;
         }
 
         .btn-submit:disabled {
-            background-color: #ccc;
+            background: #ccc;
             cursor: not-allowed;
+            transform: none;
         }
 
         .btn-reset {
@@ -172,46 +265,172 @@
             color: white;
             border: none;
             padding: 12px 40px;
-            border-radius: 5px;
+            border-radius: 6px;
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-reset:hover {
             background-color: #5a6268;
+            transform: translateY(-2px);
             color: white;
         }
 
         .form-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 30px;
+            gap: 15px;
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
         }
 
         .alert {
-            border-radius: 5px;
+            border-radius: 8px;
             margin-bottom: 20px;
+            border: none;
+            border-left: 4px solid;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            border-left-color: #28a745;
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-danger {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+            color: #721c24;
         }
 
         .required {
             color: #dc3545;
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        .col-md-6 {
+            padding-right: 12px;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+
+        .col-md-6:nth-child(even) {
+            padding-right: 0;
+            padding-left: 12px;
+        }
+
+        .row .col-md-12 {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        .section-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 25px 0;
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                width: 150px;
+                position: relative;
+                width: 100%;
+                height: auto;
+                margin-bottom: 20px;
             }
+
             .main-content {
-                margin-left: 150px;
+                margin-left: 0;
+                width: 100%;
                 padding: 15px;
             }
+
             .page-title {
                 font-size: 20px;
             }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .btn-submit, .btn-reset {
+                width: 100%;
+            }
+
+            .col-md-6 {
+                padding-right: 0 !important;
+                padding-left: 0 !important;
+            }
+
+            .col-md-6:nth-child(even) {
+                padding-right: 0 !important;
+                padding-left: 0 !important;
+            }
         }
+
+        .asset-mode-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 8px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+
+        .asset-mode-btn {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid var(--primary-blue);
+            border-radius: 6px;
+            background: #fff;
+            color: var(--primary-blue);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .asset-mode-btn.active {
+            background: var(--primary-blue);
+            color: #fff;
+        }
+
+        .asset-mode-panel {
+            display: none;
+        }
+
+        .asset-mode-panel.active {
+            display: block;
+        }
+
+        .bulk-frame {
+            width: 100%;
+            min-height: 1050px;
+            border: 0;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+
+        @media (max-width: 768px) {
+            .asset-mode-tabs {
+                flex-direction: column;
+            }
+
+            .bulk-frame {
+                min-height: 1300px;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -221,22 +440,36 @@
             <h5><i class="fas fa-metro"></i> CMRL AFC</h5>
             <small>Asset Management</small>
         </div>
-        <a href="dashboard.html" class="nav-link"><i class="fas fa-chart-line"></i> Dashboard</a>
-        <a href="asset_master.html" class="nav-link active"><i class="fas fa-plus-circle"></i> Add Asset</a>
-        <a href="search.html" class="nav-link"><i class="fas fa-search"></i> Search</a>
-        <a href="spare_movement.html" class="nav-link"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
-        <a href="spare_inventory.html" class="nav-link"><i class="fas fa-boxes"></i> Spare Inventory</a>
-        <a href="reports.html" class="nav-link"><i class="fas fa-file-alt"></i> Reports</a>
-        <a href="users.html" class="nav-link"><i class="fas fa-users"></i> Users</a>
-        <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+        <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="asset_master.html" class="active"><i class="fas fa-plus-circle"></i> Add Asset</a>
+        <a href="search.html"><i class="fas fa-search"></i> Search</a>
+        <a href="spare_movement.html"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
+        <a href="spare_inventory.html"><i class="fas fa-boxes"></i> Spare Inventory</a>
+        <a href="reports.html"><i class="fas fa-file-alt"></i> Reports</a>
+        <a href="users.html"><i class="fas fa-users"></i> Users</a>
+        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
         <div class="page-header">
             <h1 class="page-title"><i class="fas fa-plus-circle"></i> Add New Asset</h1>
+            <p class="page-subtitle">Add one asset manually or import multiple assets from Excel/Google Sheets</p>
         </div>
 
+
+        <div class="asset-mode-tabs">
+            <button type="button" id="singleAssetTab" class="asset-mode-btn active"
+                    onclick="showAssetMode('single')">
+                <i class="fas fa-edit"></i> Single Asset Entry
+            </button>
+            <button type="button" id="bulkAssetTab" class="asset-mode-btn"
+                    onclick="showAssetMode('bulk')">
+                <i class="fas fa-file-excel"></i> Bulk Import
+            </button>
+        </div>
+
+        <div id="singleAssetPanel" class="asset-mode-panel active">
         <!-- Alert Messages -->
         <div id="successAlert" class="alert alert-success alert-dismissible fade" role="alert" style="display: none;">
             <i class="fas fa-check-circle"></i>
@@ -252,6 +485,7 @@
 
         <!-- Form -->
         <form id="assetForm">
+            <!-- System & Equipment Type Card -->
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-cog"></i> System & Equipment Type
@@ -274,13 +508,13 @@
                             <select id="equipmentType" class="form-select" required>
                                 <option value="">-- Select Equipment Type --</option>
                             </select>
-                            <small class="form-text">Equipment types change based on system selection</small>
+                            <small class="form-text"><i class="fas fa-info-circle"></i> Equipment options change based on system selection</small>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Common Fields -->
+            <!-- Asset Information Card -->
             <div class="card">
                 <div class="card-header">
                     <i class="fas fa-info-circle"></i> Asset Information
@@ -358,16 +592,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="form-label">Condition</label>
-                            <select id="condition" class="form-select">
-                                <option value="">-- Select Condition --</option>
-                                <option value="EXCELLENT">Excellent</option>
-                                <option value="GOOD">Good</option>
-                                <option value="FAIR">Fair</option>
-                                <option value="POOR">Poor</option>
-                            </select>
-                        </div>
+                        
                         <div class="col-md-6">
                             <label class="form-label">Install Date</label>
                             <input type="date" id="installDate" class="form-control">
@@ -376,8 +601,8 @@
                 </div>
             </div>
 
-            <!-- AG Specific Fields -->
-            <div id="agSection" class="card" style="display: none;">
+            <!-- AG Specific Fields Card -->
+            <div id="agSection" class="card conditional-field">
                 <div class="card-header">
                     <i class="fas fa-door-open"></i> AG Specific Details
                 </div>
@@ -385,12 +610,30 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label">Device ID</label>
-                            <input type="text" id="deviceId" class="form-control">
+                            <input type="text" id="deviceId" class="form-control" placeholder="e.g., DEV-001">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Direction</label>
-                            <select id="direction" class="form-select">
-                                <option value="">-- Select Direction --</option>
+                            <label class="form-label">Gate Type</label>
+                            <select id="gateType" class="form-select">
+                                <option value="">-- Gate Type --</option>
+                                <option value="ENTRY">Entry</option>
+                                <option value="EXIT">Exit</option>
+                                <option value="BI-DIRECTION">Bi-Direction</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Array</label>
+                            <select id="array" class="form-select">
+                                <option value="">-- Array --</option>
+                                <option value="ENTRY">Entry</option>
+                                <option value="EXIT">Exit</option>
+                                
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Gate Direction</label>
+                            <select id="gateDirection" class="form-select">
+                                <option value="">-- Select Gate Direction --</option>
                                 <option value="ENTRY">Entry</option>
                                 <option value="EXIT">Exit</option>
                                 <option value="BI-DIRECTION">Bi-Direction</option>
@@ -398,71 +641,95 @@
                         </div>
                     </div>
 
-                    <!-- Entry Scanner -->
+                    <!-- Entry Scanner Section -->
                     <div class="field-section">
-                        <label class="form-label"><strong>Entry SCANNER</strong></label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="entryScannerYes" name="entryScanner" value="YES">
-                            <label class="form-check-label" for="entryScannerYes">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="entryScannerNo" name="entryScanner" value="NO">
-                            <label class="form-check-label" for="entryScannerNo">No</label>
-                        </div>
-                        <div id="entryScannerIdField" class="conditional-field mt-2">
-                            <label class="form-label">Scanner ID</label>
-                            <input type="text" id="entryScannerID" class="form-control">
+                        <div class="field-section-title">Entry SCANNER</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="entryScannerYes" name="entryScanner" value="YES">
+                                    <label class="form-check-label" for="entryScannerYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="entryScannerNo" name="entryScanner" value="NO">
+                                    <label class="form-check-label" for="entryScannerNo">No</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="entryScannerIdField" class="conditional-field">
+                                    <label class="form-label">Scanner ID</label>
+                                    <input type="text" id="entryScannerID" class="form-control" placeholder="e.g., SCAN-E001">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Exit Scanner -->
+                    <!-- Exit Scanner Section -->
                     <div class="field-section">
-                        <label class="form-label"><strong>Exit SCANNER</strong></label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="exitScannerYes" name="exitScanner" value="YES">
-                            <label class="form-check-label" for="exitScannerYes">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="exitScannerNo" name="exitScanner" value="NO">
-                            <label class="form-check-label" for="exitScannerNo">No</label>
-                        </div>
-                        <div id="exitScannerIdField" class="conditional-field mt-2">
-                            <label class="form-label">Scanner ID</label>
-                            <input type="text" id="exitScannerID" class="form-control">
+                        <div class="field-section-title">Exit SCANNER</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="exitScannerYes" name="exitScanner" value="YES">
+                                    <label class="form-check-label" for="exitScannerYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="exitScannerNo" name="exitScanner" value="NO">
+                                    <label class="form-check-label" for="exitScannerNo">No</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="exitScannerIdField" class="conditional-field">
+                                    <label class="form-label">Scanner ID</label>
+                                    <input type="text" id="exitScannerID" class="form-control" placeholder="e.g., SCAN-X001">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Entry Reader -->
+                    <!-- Entry Reader Section -->
                     <div class="field-section">
-                        <label class="form-label"><strong>Entry Reader</strong></label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="entryReaderYes" name="entryReader" value="YES">
-                            <label class="form-check-label" for="entryReaderYes">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="entryReaderNo" name="entryReader" value="NO">
-                            <label class="form-check-label" for="entryReaderNo">No</label>
-                        </div>
-                        <div id="entryReaderIdField" class="conditional-field mt-2">
-                            <label class="form-label">Reader ID</label>
-                            <input type="text" id="entryReaderID" class="form-control">
+                        <div class="field-section-title">Entry Reader</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="entryReaderYes" name="entryReader" value="YES">
+                                    <label class="form-check-label" for="entryReaderYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="entryReaderNo" name="entryReader" value="NO">
+                                    <label class="form-check-label" for="entryReaderNo">No</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="entryReaderIdField" class="conditional-field">
+                                    <label class="form-label">Reader ID</label>
+                                    <input type="text" id="entryReaderID" class="form-control" placeholder="e.g., READER-E001">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Exit Reader -->
+                    <!-- Exit Reader Section -->
                     <div class="field-section">
-                        <label class="form-label"><strong>Exit Reader</strong></label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="exitReaderYes" name="exitReader" value="YES">
-                            <label class="form-check-label" for="exitReaderYes">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="exitReaderNo" name="exitReader" value="NO">
-                            <label class="form-check-label" for="exitReaderNo">No</label>
-                        </div>
-                        <div id="exitReaderIdField" class="conditional-field mt-2">
-                            <label class="form-label">Reader ID</label>
-                            <input type="text" id="exitReaderID" class="form-control">
+                        <div class="field-section-title">Exit Reader</div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="exitReaderYes" name="exitReader" value="YES">
+                                    <label class="form-check-label" for="exitReaderYes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="exitReaderNo" name="exitReader" value="NO">
+                                    <label class="form-check-label" for="exitReaderNo">No</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="exitReaderIdField" class="conditional-field">
+                                    <label class="form-label">Reader ID</label>
+                                    <input type="text" id="exitReaderID" class="form-control" placeholder="e.g., READER-X001">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -494,27 +761,27 @@
                 </div>
             </div>
 
-            <!-- Equipment Details (for non-AG systems) -->
-            <div id="equipmentDetailsSection" class="card" style="display: none;">
+            <!-- Equipment Details Card (for non-AG systems) -->
+            <div id="equipmentDetailsSection" class="card conditional-field">
                 <div class="card-header">
                     <i class="fas fa-box"></i> Equipment Details
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="form-label">Equipment Name</label>
-                            <input type="text" id="equipmentName" class="form-control">
+                            <label class="form-label">Location</label>
+                            <input type="text" id="location" class="form-control" placeholder="e.g., Thermal Receipt Printer">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Manufacturer</label>
-                            <input type="text" id="manufacturer" class="form-control">
+                            <input type="text" id="manufacturer" class="form-control" placeholder="e.g., Epson">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label">Model</label>
-                            <input type="text" id="model" class="form-control">
+                            <input type="text" id="model" class="form-control" placeholder="e.g., TM-220UP">
                         </div>
                     </div>
 
@@ -537,203 +804,962 @@
                 </button>
             </div>
         </form>
-    </div>
+        </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec';
+        <div id="bulkAssetPanel" class="asset-mode-panel">
+            <iframe
+                id="bulkImportFrame"
+                class="bulk-frame"
+                srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Bulk Import Assets - CMRL AFC Asset Management&lt;/title&gt;
+    &lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;link href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;style&gt;
+        :root {
+            --primary-blue: #0d47a1;
+            --secondary-blue: #1565c0;
+            --light-bg: #f5f5f5;
+        }
 
-        // Equipment types by system
-        const equipmentTypes = {
-            'AG': ['Automatic Gate'],
-            'NCMC': ['Printer', 'EDC Device', 'EDC Device Base', 'POS Device', 
-                     'POS Device and Base', 'Ticket Reader', 'Cash Counter', 'Barcode Scanner',
-                     'Passenger Display Unit', 'Charger adapter', 'Counter Communication Set',
-                     'Adapter', 'Charger', 'Other'],
-            'QR': ['Touch Display', 'QR Printer', 'QR Scanner', 'Cash Counter',
-                   'Adapter', 'Charger', 'Other'],
-            'PINELAB': ['POS Device', 'EDC Device', 'Charger', 'Adapter', 'Other'],
-            'TVM': ['Ticket Vending Machine', 'Card Reader', 'Coin Acceptor', 'Note Acceptor',
-                    'Thermal Printer', 'Display', 'Charger', 'Adapter', 'Other']
-        };
+        * { box-sizing: border-box; }
 
-        // Sheet mapping
-        const sheetMapping = {
-            'AG': 'AG',
-            'NCMC': 'NCMC system',
-            'QR': 'QR system',
-            'PINELAB': 'Pinelab QR',
-            'TVM': 'TVM'
-        };
+        body {
+            margin: 0;
+            background: var(--light-bg);
+            font-family: &quot;Segoe UI&quot;, Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
 
-        // Handle system type change
-        document.getElementById('systemType').addEventListener('change', function() {
-            const systemType = this.value;
-            const equipmentTypeSelect = document.getElementById('equipmentType');
-            const agSection = document.getElementById('agSection');
-            const equipmentDetailsSection = document.getElementById('equipmentDetailsSection');
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 220px;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,.1);
+            z-index: 1000;
+        }
 
-            // Clear and hide sections
-            equipmentTypeSelect.innerHTML = '<option value="">-- Select Equipment Type --</option>';
-            agSection.style.display = 'none';
-            equipmentDetailsSection.style.display = 'none';
+        .logo {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,.2);
+        }
 
-            if (systemType && equipmentTypes[systemType]) {
-                // Populate equipment types for selected system
-                equipmentTypes[systemType].forEach(type => {
-                    const option = document.createElement('option');
-                    option.value = type;
-                    option.textContent = type;
-                    equipmentTypeSelect.appendChild(option);
-                });
+        .logo h5 { margin: 0; font-weight: 700; }
+        .logo small { display: block; margin-top: 5px; opacity: .9; }
 
-                // Show appropriate section
-                if (systemType === 'AG') {
-                    agSection.style.display = 'block';
-                } else {
-                    equipmentDetailsSection.style.display = 'block';
-                }
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: .2s ease;
+        }
+
+        .sidebar a i { width: 20px; }
+        .sidebar a:hover { background: var(--secondary-blue); transform: translateX(4px); }
+        .sidebar a.active {
+            background: var(--secondary-blue);
+            border-left: 4px solid #ffc107;
+            padding-left: 11px;
+        }
+
+        .main-content {
+            margin-left: 220px;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .page-header,
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.1);
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+            padding: 25px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .page-title {
+            margin: 0;
+            color: var(--primary-blue);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .page-subtitle { margin: 6px 0 0; color: #777; font-size: 14px; }
+
+        .card { border: 0; margin-bottom: 25px; }
+        .card-header {
+            padding: 18px 22px;
+            color: white;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border-radius: 8px 8px 0 0 !important;
+        }
+        .card-body { padding: 24px; }
+
+        .form-label { color: var(--primary-blue); font-weight: 600; }
+        .form-control, .form-select {
+            min-height: 44px;
+            border-radius: 6px;
+        }
+
+        .import-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            border: 1px solid var(--primary-blue);
+            background: white;
+            color: var(--primary-blue);
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .import-panel { display: none; }
+        .import-panel.active { display: block; }
+
+        .upload-box {
+            padding: 30px;
+            border: 2px dashed #9bb7db;
+            border-radius: 8px;
+            text-align: center;
+            background: #f8fbff;
+        }
+
+        .upload-box i {
+            display: block;
+            margin-bottom: 12px;
+            color: var(--primary-blue);
+            font-size: 44px;
+        }
+
+        .btn-primary-custom,
+        .btn-success-custom {
+            border: 0;
+            padding: 11px 22px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-primary-custom { background: var(--primary-blue); }
+        .btn-success-custom { background: #198754; }
+        .btn-primary-custom:disabled,
+        .btn-success-custom:disabled { opacity: .65; cursor: not-allowed; }
+
+        .template-table th {
+            white-space: nowrap;
+            color: var(--primary-blue);
+            font-size: 12px;
+        }
+
+        .preview-wrap {
+            max-height: 430px;
+            overflow: auto;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+        }
+
+        .preview-wrap table { margin-bottom: 0; min-width: 1100px; }
+        .preview-wrap th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: #eef4fb;
+            white-space: nowrap;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px,1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            padding: 15px;
+            border-radius: 7px;
+            background: #f7f9fc;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .summary-box strong {
+            display: block;
+            color: var(--primary-blue);
+            font-size: 22px;
+        }
+
+        .note {
+            padding: 14px 16px;
+            border-left: 4px solid #ffc107;
+            background: #fff8df;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
             }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .page-title { font-size: 21px; }
+        }
+    &lt;/style&gt;
+
+    &lt;style&gt;
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: transparent !important;
+            overflow-x: hidden;
+        }
+
+        .main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+            min-height: auto !important;
+            padding: 0 !important;
+        }
+
+        .card:first-child {
+            margin-top: 0 !important;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+            }
+        }
+    &lt;/style&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+&lt;main class=&quot;main-content&quot;&gt;
+&lt;div id=&quot;messageBox&quot;&gt;&lt;/div&gt;
+
+        &lt;section class=&quot;card&quot;&gt;
+            &lt;div class=&quot;card-header&quot;&gt;&lt;i class=&quot;fas fa-cog&quot;&gt;&lt;/i&gt; Import Settings&lt;/div&gt;
+            &lt;div class=&quot;card-body&quot;&gt;
+                &lt;div class=&quot;row g-3&quot;&gt;
+                    &lt;div class=&quot;col-md-6&quot;&gt;
+                        &lt;label class=&quot;form-label&quot; for=&quot;systemType&quot;&gt;Target System Type&lt;/label&gt;
+                        &lt;select id=&quot;systemType&quot; class=&quot;form-select&quot;&gt;
+                            &lt;option value=&quot;&quot;&gt;-- Select System Type --&lt;/option&gt;
+                            &lt;option value=&quot;AG&quot;&gt;AG (Automatic Gate)&lt;/option&gt;
+                            &lt;option value=&quot;NCMC&quot;&gt;NCMC System&lt;/option&gt;
+                            &lt;option value=&quot;QR&quot;&gt;QR System&lt;/option&gt;
+                            &lt;option value=&quot;PINELAB&quot;&gt;Pinelab QR&lt;/option&gt;
+                            &lt;option value=&quot;TVM&quot;&gt;TVM&lt;/option&gt;
+                        &lt;/select&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;col-md-6 d-flex align-items-end&quot;&gt;
+                        &lt;button type=&quot;button&quot; class=&quot;btn-primary-custom w-100&quot; onclick=&quot;downloadTemplate()&quot;&gt;
+                            &lt;i class=&quot;fas fa-download&quot;&gt;&lt;/i&gt; Download Selected Template
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class=&quot;note mt-3&quot;&gt;
+                    &lt;strong&gt;Timestamp is not required.&lt;/strong&gt; Any Timestamp column in Excel or Google Sheets is ignored.
+                    The system creates a new timestamp when each asset is imported.
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section class=&quot;card&quot;&gt;
+            &lt;div class=&quot;card-header&quot;&gt;&lt;i class=&quot;fas fa-upload&quot;&gt;&lt;/i&gt; Select Import Method&lt;/div&gt;
+            &lt;div class=&quot;card-body&quot;&gt;
+                &lt;div class=&quot;import-tabs&quot;&gt;
+                    &lt;button type=&quot;button&quot; class=&quot;tab-btn active&quot; data-panel=&quot;filePanel&quot;&gt;
+                        &lt;i class=&quot;fas fa-file-excel&quot;&gt;&lt;/i&gt; Excel / CSV Upload
+                    &lt;/button&gt;
+                    &lt;button type=&quot;button&quot; class=&quot;tab-btn&quot; data-panel=&quot;sheetPanel&quot;&gt;
+                        &lt;i class=&quot;fas fa-table&quot;&gt;&lt;/i&gt; Existing Google Sheet
+                    &lt;/button&gt;
+                &lt;/div&gt;
+
+                &lt;div id=&quot;filePanel&quot; class=&quot;import-panel active&quot;&gt;
+                    &lt;div class=&quot;upload-box&quot;&gt;
+                        &lt;i class=&quot;fas fa-cloud-upload-alt&quot;&gt;&lt;/i&gt;
+                        &lt;h5&gt;Select Excel or CSV file&lt;/h5&gt;
+                        &lt;p class=&quot;text-muted&quot;&gt;Supported: .xlsx, .xls and .csv&lt;/p&gt;
+                        &lt;input id=&quot;fileInput&quot; type=&quot;file&quot; class=&quot;form-control&quot;
+                               accept=&quot;.xlsx,.xls,.csv&quot; style=&quot;max-width:520px;margin:0 auto;&quot;&gt;
+                    &lt;/div&gt;
+
+                    &lt;div class=&quot;mt-3 d-flex gap-2 flex-wrap&quot;&gt;
+                        &lt;button id=&quot;readFileBtn&quot; type=&quot;button&quot; class=&quot;btn-primary-custom&quot; onclick=&quot;readSelectedFile()&quot;&gt;
+                            &lt;i class=&quot;fas fa-eye&quot;&gt;&lt;/i&gt; Read and Preview
+                        &lt;/button&gt;
+                        &lt;button id=&quot;uploadBtn&quot; type=&quot;button&quot; class=&quot;btn-success-custom&quot; onclick=&quot;uploadRecords()&quot; disabled&gt;
+                            &lt;i class=&quot;fas fa-upload&quot;&gt;&lt;/i&gt; Import Assets
+                        &lt;/button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div id=&quot;sheetPanel&quot; class=&quot;import-panel&quot;&gt;
+                    &lt;div class=&quot;row g-3&quot;&gt;
+                        &lt;div class=&quot;col-md-8&quot;&gt;
+                            &lt;label class=&quot;form-label&quot; for=&quot;sourceSheetName&quot;&gt;Source Sheet Tab Name&lt;/label&gt;
+                            &lt;input id=&quot;sourceSheetName&quot; class=&quot;form-control&quot;
+                                   placeholder=&quot;Example: Import Data&quot;&gt;
+                            &lt;small class=&quot;text-muted&quot;&gt;
+                                The source tab must be inside the same spreadsheet used by this application.
+                            &lt;/small&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;col-md-4 d-flex align-items-end&quot;&gt;
+                            &lt;button id=&quot;sheetImportBtn&quot; type=&quot;button&quot; class=&quot;btn-success-custom w-100&quot;
+                                    onclick=&quot;importExistingSheet()&quot;&gt;
+                                &lt;i class=&quot;fas fa-file-import&quot;&gt;&lt;/i&gt; Import Sheet Data
+                            &lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section id=&quot;previewCard&quot; class=&quot;card&quot; style=&quot;display:none;&quot;&gt;
+            &lt;div class=&quot;card-header&quot;&gt;&lt;i class=&quot;fas fa-list&quot;&gt;&lt;/i&gt; Import Preview&lt;/div&gt;
+            &lt;div class=&quot;card-body&quot;&gt;
+                &lt;div class=&quot;summary-grid&quot;&gt;
+                    &lt;div class=&quot;summary-box&quot;&gt;
+                        &lt;span&gt;Rows detected&lt;/span&gt;
+                        &lt;strong id=&quot;rowCount&quot;&gt;0&lt;/strong&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;summary-box&quot;&gt;
+                        &lt;span&gt;Columns detected&lt;/span&gt;
+                        &lt;strong id=&quot;columnCount&quot;&gt;0&lt;/strong&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;summary-box&quot;&gt;
+                        &lt;span&gt;Timestamp columns ignored&lt;/span&gt;
+                        &lt;strong id=&quot;timestampCount&quot;&gt;0&lt;/strong&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;preview-wrap&quot;&gt;
+                    &lt;table class=&quot;table table-bordered table-sm&quot;&gt;
+                        &lt;thead id=&quot;previewHead&quot;&gt;&lt;/thead&gt;
+                        &lt;tbody id=&quot;previewBody&quot;&gt;&lt;/tbody&gt;
+                    &lt;/table&gt;
+                &lt;/div&gt;
+                &lt;small class=&quot;text-muted d-block mt-2&quot;&gt;
+                    Preview shows the first 20 rows only. All detected rows will be imported.
+                &lt;/small&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+
+        &lt;section class=&quot;card&quot;&gt;
+            &lt;div class=&quot;card-header&quot;&gt;&lt;i class=&quot;fas fa-table&quot;&gt;&lt;/i&gt; Accepted Column Names&lt;/div&gt;
+            &lt;div class=&quot;card-body&quot;&gt;
+                &lt;div class=&quot;table-responsive&quot;&gt;
+                    &lt;table class=&quot;table table-bordered template-table&quot;&gt;
+                        &lt;thead&gt;
+                            &lt;tr&gt;
+                                &lt;th&gt;System&lt;/th&gt;
+                                &lt;th&gt;Required / Supported Columns&lt;/th&gt;
+                            &lt;/tr&gt;
+                        &lt;/thead&gt;
+                        &lt;tbody&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;&lt;strong&gt;AG&lt;/strong&gt;&lt;/td&gt;
+                                &lt;td&gt;
+                                    Asset ID, Station Name/Station, Device ID, Gate Type, Array,
+                                    Gate Direction/Direction, Status, Installation Date,
+                                    Entry QR Scanner, Entry Scanner ID, Exit QR Scanner,
+                                    Exit Scanner ID, Entry FEIG Reader, Entry Reader Serial No,
+                                    Exit FEIG Reader, Exit Reader Serial No, Wide/Normal,
+                                    Old/New, Remarks
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;&lt;strong&gt;NCMC / QR / PINELAB / TVM&lt;/strong&gt;&lt;/td&gt;
+                                &lt;td&gt;
+                                    Asset ID, Equipment Type, Location, Serial Number,
+                                    Manufacturer, Model, Station, Status, Install Date, Remarks
+                                &lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;/tbody&gt;
+                    &lt;/table&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script&gt;
+        &quot;use strict&quot;;
+
+        const GOOGLE_SCRIPT_URL =
+            &quot;https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec&quot;;
+
+        const AG_HEADERS = [
+            &quot;Asset ID&quot;, &quot;Station Name&quot;, &quot;Device ID&quot;, &quot;Gate Type&quot;, &quot;Array&quot;,
+            &quot;Gate Direction&quot;, &quot;Status&quot;, &quot;Installation Date&quot;, &quot;Entry QR Scanner&quot;,
+            &quot;Entry Scanner ID&quot;, &quot;Exit QR Scanner&quot;, &quot;Exit Scanner ID&quot;,
+            &quot;Entry FEIG Reader&quot;, &quot;Entry Reader Serial No&quot;, &quot;Exit FEIG Reader&quot;,
+            &quot;Exit Reader Serial No&quot;, &quot;Wide/Normal&quot;, &quot;Old/New&quot;, &quot;Remarks&quot;
+        ];
+
+        const OTHER_HEADERS = [
+            &quot;Asset ID&quot;, &quot;Equipment Type&quot;, &quot;Location&quot;, &quot;Serial Number&quot;,
+            &quot;Manufacturer&quot;, &quot;Model&quot;, &quot;Station&quot;, &quot;Status&quot;, &quot;Install Date&quot;, &quot;Remarks&quot;
+        ];
+
+        let parsedRecords = [];
+
+        const $ = id =&gt; document.getElementById(id);
+
+        document.querySelectorAll(&quot;.tab-btn&quot;).forEach(button =&gt; {
+            button.addEventListener(&quot;click&quot;, () =&gt; {
+                document.querySelectorAll(&quot;.tab-btn&quot;).forEach(btn =&gt; btn.classList.remove(&quot;active&quot;));
+                document.querySelectorAll(&quot;.import-panel&quot;).forEach(panel =&gt; panel.classList.remove(&quot;active&quot;));
+                button.classList.add(&quot;active&quot;);
+                $(button.dataset.panel).classList.add(&quot;active&quot;);
+            });
         });
 
-        // Setup conditional fields for AG scanners/readers
-        function setupConditionalFields() {
-            // Entry Scanner
-            ['entryScannerYes', 'entryScannerNo'].forEach(id => {
-                document.getElementById(id).addEventListener('change', function() {
-                    const field = document.getElementById('entryScannerIdField');
-                    field.classList.toggle('active', this.value === 'YES');
+        function normalizeHeader(header) {
+            return String(header || &quot;&quot;)
+                .trim()
+                .toLowerCase()
+                .replace(/[\/_-]+/g, &quot; &quot;)
+                .replace(/[^a-z0-9 ]/g, &quot;&quot;)
+                .replace(/\s+/g, &quot; &quot;)
+                .trim();
+        }
+
+        function isTimestampHeader(header) {
+            return [&quot;timestamp&quot;, &quot;time stamp&quot;, &quot;created at&quot;, &quot;date added&quot;]
+                .includes(normalizeHeader(header));
+        }
+
+        function showMessage(type, message) {
+            $(&quot;messageBox&quot;).innerHTML = `
+                &lt;div class=&quot;alert alert-${type} alert-dismissible fade show&quot; role=&quot;alert&quot;&gt;
+                    ${escapeHtml(message)}
+                    &lt;button type=&quot;button&quot; class=&quot;btn-close&quot; data-bs-dismiss=&quot;alert&quot;&gt;&lt;/button&gt;
+                &lt;/div&gt;
+            `;
+            window.scrollTo({ top: 0, behavior: &quot;smooth&quot; });
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? &quot;&quot;)
+                .replace(/&amp;/g, &quot;&amp;amp;&quot;)
+                .replace(/&lt;/g, &quot;&amp;lt;&quot;)
+                .replace(/&gt;/g, &quot;&amp;gt;&quot;)
+                .replace(/&quot;/g, &quot;&amp;quot;&quot;)
+                .replace(/&#x27;/g, &quot;&amp;#039;&quot;);
+        }
+
+        function selectedSystem() {
+            return $(&quot;systemType&quot;).value;
+        }
+
+        async function readSelectedFile() {
+            const systemType = selectedSystem();
+            const file = $(&quot;fileInput&quot;).files[0];
+
+            if (!systemType) {
+                showMessage(&quot;warning&quot;, &quot;Please select the target system type.&quot;);
+                return;
+            }
+
+            if (!file) {
+                showMessage(&quot;warning&quot;, &quot;Please select an Excel or CSV file.&quot;);
+                return;
+            }
+
+            try {
+                $(&quot;readFileBtn&quot;).disabled = true;
+                $(&quot;readFileBtn&quot;).innerHTML = &#x27;&lt;i class=&quot;fas fa-spinner fa-spin&quot;&gt;&lt;/i&gt; Reading&#x27;;
+
+                const bytes = await file.arrayBuffer();
+                const workbook = XLSX.read(bytes, { type: &quot;array&quot;, cellDates: false });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(firstSheet, {
+                    defval: &quot;&quot;,
+                    raw: false
                 });
+
+                parsedRecords = rows.map(record =&gt; {
+                    const cleaned = {};
+                    Object.entries(record).forEach(([key, value]) =&gt; {
+                        if (!isTimestampHeader(key)) {
+                            cleaned[String(key).trim()] = value;
+                        }
+                    });
+                    return cleaned;
+                }).filter(record =&gt;
+                    Object.values(record).some(value =&gt; String(value || &quot;&quot;).trim() !== &quot;&quot;)
+                );
+
+                if (!parsedRecords.length) {
+                    throw new Error(&quot;No usable data rows were found in the selected file.&quot;);
+                }
+
+                renderPreview(parsedRecords);
+                $(&quot;uploadBtn&quot;).disabled = false;
+                showMessage(&quot;success&quot;, `${parsedRecords.length} row(s) loaded. Review the preview and click Import Assets.`);
+            } catch (error) {
+                parsedRecords = [];
+                $(&quot;uploadBtn&quot;).disabled = true;
+                $(&quot;previewCard&quot;).style.display = &quot;none&quot;;
+                showMessage(&quot;danger&quot;, error.message || &quot;Unable to read the selected file.&quot;);
+            } finally {
+                $(&quot;readFileBtn&quot;).disabled = false;
+                $(&quot;readFileBtn&quot;).innerHTML = &#x27;&lt;i class=&quot;fas fa-eye&quot;&gt;&lt;/i&gt; Read and Preview&#x27;;
+            }
+        }
+
+        function renderPreview(records) {
+            const headers = [...new Set(records.flatMap(record =&gt; Object.keys(record)))];
+            const timestampColumns = headers.filter(isTimestampHeader).length;
+            const previewHeaders = headers.filter(header =&gt; !isTimestampHeader(header));
+
+            $(&quot;rowCount&quot;).textContent = records.length;
+            $(&quot;columnCount&quot;).textContent = previewHeaders.length;
+            $(&quot;timestampCount&quot;).textContent = timestampColumns;
+
+            $(&quot;previewHead&quot;).innerHTML = `
+                &lt;tr&gt;${previewHeaders.map(header =&gt; `&lt;th&gt;${escapeHtml(header)}&lt;/th&gt;`).join(&quot;&quot;)}&lt;/tr&gt;
+            `;
+
+            $(&quot;previewBody&quot;).innerHTML = records.slice(0, 20).map(record =&gt; `
+                &lt;tr&gt;
+                    ${previewHeaders.map(header =&gt;
+                        `&lt;td&gt;${escapeHtml(record[header] ?? &quot;&quot;)}&lt;/td&gt;`
+                    ).join(&quot;&quot;)}
+                &lt;/tr&gt;
+            `).join(&quot;&quot;);
+
+            $(&quot;previewCard&quot;).style.display = &quot;block&quot;;
+        }
+
+        async function postJson(payload) {
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: &quot;POST&quot;,
+                redirect: &quot;follow&quot;,
+                headers: { &quot;Content-Type&quot;: &quot;text/plain;charset=utf-8&quot; },
+                body: JSON.stringify(payload)
             });
 
-            // Exit Scanner
-            ['exitScannerYes', 'exitScannerNo'].forEach(id => {
-                document.getElementById(id).addEventListener('change', function() {
-                    const field = document.getElementById('exitScannerIdField');
-                    field.classList.toggle('active', this.value === 'YES');
+            const text = await response.text();
+            let result;
+
+            try {
+                result = JSON.parse(text);
+            } catch {
+                throw new Error(&quot;Invalid response from Apps Script. Deploy the latest Code.gs version.&quot;);
+            }
+
+            if (!result.success) {
+                throw new Error(result.error || &quot;Import failed.&quot;);
+            }
+
+            return result.data || {};
+        }
+
+        async function uploadRecords() {
+            const systemType = selectedSystem();
+
+            if (!systemType) {
+                showMessage(&quot;warning&quot;, &quot;Please select the target system type.&quot;);
+                return;
+            }
+
+            if (!parsedRecords.length) {
+                showMessage(&quot;warning&quot;, &quot;Please read an Excel or CSV file first.&quot;);
+                return;
+            }
+
+            try {
+                $(&quot;uploadBtn&quot;).disabled = true;
+                $(&quot;uploadBtn&quot;).innerHTML = &#x27;&lt;i class=&quot;fas fa-spinner fa-spin&quot;&gt;&lt;/i&gt; Importing&#x27;;
+
+                const result = await postJson({
+                    action: &quot;bulkAdd&quot;,
+                    systemType,
+                    records: parsedRecords
                 });
+
+                const skippedText = result.skipped
+                    ? ` ${result.skipped} row(s) were skipped because of missing or duplicate Asset IDs.`
+                    : &quot;&quot;;
+
+                showMessage(
+                    result.imported ? &quot;success&quot; : &quot;warning&quot;,
+                    `${result.imported || 0} asset(s) imported into ${result.sheetName || systemType}.${skippedText}`
+                );
+
+                if (result.imported) {
+                    parsedRecords = [];
+                    $(&quot;fileInput&quot;).value = &quot;&quot;;
+                    $(&quot;previewCard&quot;).style.display = &quot;none&quot;;
+                }
+            } catch (error) {
+                showMessage(&quot;danger&quot;, error.message || &quot;Unable to import assets.&quot;);
+            } finally {
+                $(&quot;uploadBtn&quot;).disabled = parsedRecords.length === 0;
+                $(&quot;uploadBtn&quot;).innerHTML = &#x27;&lt;i class=&quot;fas fa-upload&quot;&gt;&lt;/i&gt; Import Assets&#x27;;
+            }
+        }
+
+        async function importExistingSheet() {
+            const systemType = selectedSystem();
+            const sourceSheetName = $(&quot;sourceSheetName&quot;).value.trim();
+
+            if (!systemType) {
+                showMessage(&quot;warning&quot;, &quot;Please select the target system type.&quot;);
+                return;
+            }
+
+            if (!sourceSheetName) {
+                showMessage(&quot;warning&quot;, &quot;Please enter the source Google Sheet tab name.&quot;);
+                return;
+            }
+
+            try {
+                $(&quot;sheetImportBtn&quot;).disabled = true;
+                $(&quot;sheetImportBtn&quot;).innerHTML = &#x27;&lt;i class=&quot;fas fa-spinner fa-spin&quot;&gt;&lt;/i&gt; Importing&#x27;;
+
+                const result = await postJson({
+                    action: &quot;importSheet&quot;,
+                    systemType,
+                    sourceSheetName
+                });
+
+                const skippedText = result.skipped
+                    ? ` ${result.skipped} row(s) were skipped.`
+                    : &quot;&quot;;
+
+                showMessage(
+                    result.imported ? &quot;success&quot; : &quot;warning&quot;,
+                    `${result.imported || 0} asset(s) imported into ${result.sheetName || systemType}.${skippedText}`
+                );
+            } catch (error) {
+                showMessage(&quot;danger&quot;, error.message || &quot;Unable to import the Google Sheet data.&quot;);
+            } finally {
+                $(&quot;sheetImportBtn&quot;).disabled = false;
+                $(&quot;sheetImportBtn&quot;).innerHTML = &#x27;&lt;i class=&quot;fas fa-file-import&quot;&gt;&lt;/i&gt; Import Sheet Data&#x27;;
+            }
+        }
+
+        function downloadTemplate() {
+            const systemType = selectedSystem();
+
+            if (!systemType) {
+                showMessage(&quot;warning&quot;, &quot;Please select a system type before downloading the template.&quot;);
+                return;
+            }
+
+            const headers = systemType === &quot;AG&quot; ? AG_HEADERS : OTHER_HEADERS;
+            const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, systemType);
+            XLSX.writeFile(workbook, `${systemType}_Asset_Import_Template.xlsx`);
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+"
+                title="Bulk Asset Import">
+            </iframe>
+        </div>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        "use strict";
+
+
+        function showAssetMode(mode) {
+            const singleMode = mode === "single";
+
+            document.getElementById("singleAssetTab").classList.toggle("active", singleMode);
+            document.getElementById("bulkAssetTab").classList.toggle("active", !singleMode);
+            document.getElementById("singleAssetPanel").classList.toggle("active", singleMode);
+            document.getElementById("bulkAssetPanel").classList.toggle("active", !singleMode);
+
+            if (!singleMode) {
+                document.getElementById("bulkAssetPanel").scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+        }
+
+
+
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec";
+
+        const equipmentTypes = {
+            AG: ["Automatic Gate"],
+            NCMC: ["Printer", "EDC Device", "EDC Device Base", "POS Device", "POS Device and Base", "Ticket Reader", "Cash Counter", "Barcode Scanner", "Passenger Display Unit", "Charger adapter", "Counter Communication Set", "Adapter", "Charger", "Other"],
+            QR: ["Touch Display", "QR Printer", "QR Scanner", "Cash Counter", "Adapter", "Charger", "Other"],
+            PINELAB: ["POS Device", "EDC Device", "Charger", "Adapter", "Other"],
+            TVM: ["Ticket Vending Machine", "Card Reader", "Coin Acceptor", "Note Acceptor", "Thermal Printer", "Display", "Charger", "Adapter", "Other"]
+        };
+
+        const sheetMapping = {
+            AG: "AG",
+            NCMC: "NCMC system",
+            QR: "QR system",
+            PINELAB: "Pinelab QR",
+            TVM: "TVM"
+        };
+
+        const $ = (id) => document.getElementById(id);
+        const valueOf = (id) => {
+            const element = $(id);
+            return element ? String(element.value || "").trim() : "";
+        };
+        const checkedValue = (name) => {
+            const element = document.querySelector(`input[name="${name}"]:checked`);
+            return element ? element.value : "";
+        };
+
+        const form = $("assetForm");
+        const systemTypeSelect = $("systemType");
+        const equipmentTypeSelect = $("equipmentType");
+        const agSection = $("agSection");
+        const equipmentDetailsSection = $("equipmentDetailsSection");
+        const submitBtn = $("submitBtn");
+
+        function hideAlerts() {
+            [$("successAlert"), $("errorAlert")].forEach((alert) => {
+                if (!alert) return;
+                alert.style.display = "none";
+                alert.classList.remove("show");
+            });
+        }
+
+        function resetConditionalFields() {
+            ["entryScannerIdField", "exitScannerIdField", "entryReaderIdField", "exitReaderIdField"].forEach((id) => {
+                const field = $(id);
+                if (field) field.classList.remove("active");
+            });
+        }
+
+        function populateEquipmentTypes(systemType) {
+            equipmentTypeSelect.innerHTML = '<option value="">-- Select Equipment Type --</option>';
+            (equipmentTypes[systemType] || []).forEach((type) => {
+                const option = document.createElement("option");
+                option.value = type;
+                option.textContent = type;
+                equipmentTypeSelect.appendChild(option);
             });
 
-            // Entry Reader
-            ['entryReaderYes', 'entryReaderNo'].forEach(id => {
-                document.getElementById(id).addEventListener('change', function() {
-                    const field = document.getElementById('entryReaderIdField');
-                    field.classList.toggle('active', this.value === 'YES');
-                });
-            });
+            if (systemType === "AG") {
+                equipmentTypeSelect.value = "Automatic Gate";
+            }
+        }
 
-            // Exit Reader
-            ['exitReaderYes', 'exitReaderNo'].forEach(id => {
-                document.getElementById(id).addEventListener('change', function() {
-                    const field = document.getElementById('exitReaderIdField');
-                    field.classList.toggle('active', this.value === 'YES');
+        function updateSystemSections() {
+            const systemType = valueOf("systemType");
+            populateEquipmentTypes(systemType);
+            agSection.classList.toggle("active", systemType === "AG");
+            equipmentDetailsSection.classList.toggle("active", Boolean(systemType) && systemType !== "AG");
+            resetConditionalFields();
+        }
+
+        function setupConditionalRadio(name, fieldId, inputId) {
+            document.querySelectorAll(`input[name="${name}"]`).forEach((radio) => {
+                radio.addEventListener("change", () => {
+                    const field = $(fieldId);
+                    const input = $(inputId);
+                    const show = checkedValue(name) === "YES";
+                    if (field) field.classList.toggle("active", show);
+                    if (!show && input) input.value = "";
                 });
             });
         }
 
-        setupConditionalFields();
+        function validateFormData(systemType, equipmentType, assetId, station) {
+            if (!systemType) return "Please select a system type.";
+            if (!equipmentType) return "Please select an equipment type.";
+            if (!assetId) return "Please enter the Asset ID.";
+            if (!station) return "Please select a station.";
+            return "";
+        }
 
-        // Form submission
-        document.getElementById('assetForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        function buildFormData() {
+            const systemType = valueOf("systemType");
+            const equipmentType = valueOf("equipmentType");
+            const assetId = valueOf("assetId").toUpperCase();
+            const station = valueOf("station");
+            const status = valueOf("status");
 
-            const systemType = document.getElementById('systemType').value;
-            if (!systemType) {
-                showError('Please select a system type');
-                return;
+            const validationError = validateFormData(systemType, equipmentType, assetId, station);
+            if (validationError) throw new Error(validationError);
+
+            const formData = {
+                action: "add",
+                systemType,
+                "Asset ID": assetId,
+                Status: status
+            };
+
+            if (systemType === "AG") {
+                Object.assign(formData, {
+                    "Station Name": station,
+                    "Device ID": valueOf("deviceId"),
+                    "Gate Type": valueOf("gateType"),
+                    Array: valueOf("array"),
+                    "Gate Direction": valueOf("gateDirection"),
+                    "Entry QR Scanner": checkedValue("entryScanner"),
+                    "Entry Scanner ID": checkedValue("entryScanner") === "YES" ? valueOf("entryScannerID") : "",
+                    "Exit QR Scanner": checkedValue("exitScanner"),
+                    "Exit Scanner ID": checkedValue("exitScanner") === "YES" ? valueOf("exitScannerID") : "",
+                    "Entry FEIG Reader": checkedValue("entryReader"),
+                    "Entry Reader Serial No": checkedValue("entryReader") === "YES" ? valueOf("entryReaderID") : "",
+                    "Exit FEIG Reader": checkedValue("exitReader"),
+                    "Exit Reader Serial No": checkedValue("exitReader") === "YES" ? valueOf("exitReaderID") : "",
+                    "Wide/Normal": valueOf("wideNormal"),
+                    "Old/New": valueOf("newOld"),
+                    "Installation Date": valueOf("installDate"),
+                    Remarks: valueOf("remarks")
+                });
+            } else {
+                Object.assign(formData, {
+                    "Equipment Type": equipmentType,
+                    Location: valueOf("location"),
+                    "Serial Number": valueOf("serialNumber"),
+                    Manufacturer: valueOf("manufacturer"),
+                    Model: valueOf("model"),
+                    Station: station,
+                    "Install Date": valueOf("installDate"),
+                    Remarks: valueOf("generalRemarks")
+                });
             }
 
-            const equipmentType = document.getElementById('equipmentType').value;
-            if (!equipmentType) {
-                showError('Please select an equipment type');
-                return;
+            return formData;
+        }
+
+        async function saveAsset(formData) {
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                redirect: "follow",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(formData)
+            });
+
+            const responseText = await response.text();
+            let result;
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                throw new Error("Invalid response from Google Apps Script. Redeploy the web app and verify access is set to Anyone.");
             }
 
-            const submitBtn = document.getElementById('submitBtn');
+            if (!result.success) {
+                throw new Error(result.error || "Failed to save the asset.");
+            }
+
+            return result;
+        }
+
+        function showSuccess(systemType) {
+            hideAlerts();
+            const alert = $("successAlert");
+            const sheetName = $("sheetName");
+            if (sheetName) sheetName.textContent = sheetMapping[systemType] || systemType;
+            if (alert) {
+                alert.style.display = "block";
+                alert.classList.add("show");
+                alert.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        function showError(message) {
+            hideAlerts();
+            const alert = $("errorAlert");
+            const errorMessage = $("errorMessage");
+            if (errorMessage) errorMessage.textContent = message;
+            if (alert) {
+                alert.style.display = "block";
+                alert.classList.add("show");
+                alert.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+
+        systemTypeSelect.addEventListener("change", updateSystemSections);
+        setupConditionalRadio("entryScanner", "entryScannerIdField", "entryScannerID");
+        setupConditionalRadio("exitScanner", "exitScannerIdField", "exitScannerID");
+        setupConditionalRadio("entryReader", "entryReaderIdField", "entryReaderID");
+        setupConditionalRadio("exitReader", "exitReaderIdField", "exitReaderID");
+
+        form.addEventListener("reset", () => {
+            window.setTimeout(() => {
+                hideAlerts();
+                equipmentTypeSelect.innerHTML = '<option value="">-- Select Equipment Type --</option>';
+                agSection.classList.remove("active");
+                equipmentDetailsSection.classList.remove("active");
+                resetConditionalFields();
+            }, 0);
+        });
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            hideAlerts();
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             try {
-                // Prepare data based on system type
-                const formData = {
-                    action: 'add',
-                    systemType: systemType,
-                    assetId: document.getElementById('assetId').value,
-                    equipmentType: equipmentType,
-                    serialNumber: document.getElementById('serialNumber').value || '',
-                    station: document.getElementById('station').value,
-                    status: document.getElementById('status').value || '',
-                    condition: document.getElementById('condition').value || '',
-                    installDate: document.getElementById('installDate').value || ''
-                };
-
-                if (systemType === 'AG') {
-                    formData.deviceId = document.getElementById('deviceId').value || '';
-                    formData.direction = document.getElementById('direction').value || '';
-                    formData.entryScanner = document.querySelector('input[name="entryScanner"]:checked')?.value || '';
-                    formData.entryScannerID = document.getElementById('entryScannerID').value || '';
-                    formData.exitScanner = document.querySelector('input[name="exitScanner"]:checked')?.value || '';
-                    formData.exitScannerID = document.getElementById('exitScannerID').value || '';
-                    formData.entryReader = document.querySelector('input[name="entryReader"]:checked')?.value || '';
-                    formData.entryReaderID = document.getElementById('entryReaderID').value || '';
-                    formData.exitReader = document.querySelector('input[name="exitReader"]:checked')?.value || '';
-                    formData.exitReaderID = document.getElementById('exitReaderID').value || '';
-                    formData.wideNormal = document.getElementById('wideNormal').value || '';
-                    formData.newOld = document.getElementById('newOld').value || '';
-                    formData.remark = document.getElementById('remarks').value || '';
-                } else {
-                    formData.equipmentName = document.getElementById('equipmentName').value || '';
-                    formData.manufacturer = document.getElementById('manufacturer').value || '';
-                    formData.model = document.getElementById('model').value || '';
-                    formData.remarks = document.getElementById('generalRemarks').value || '';
-                }
-
-                // Send to Google Apps Script
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(formData)
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    showSuccess(systemType);
-                    document.getElementById('assetForm').reset();
-                    document.getElementById('equipmentType').innerHTML = '<option value="">-- Select Equipment Type --</option>';
-                    document.getElementById('agSection').style.display = 'none';
-                    document.getElementById('equipmentDetailsSection').style.display = 'none';
-
-                    // Redirect to dashboard after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 2000);
-                } else {
-                    showError(data.error || 'Failed to save asset');
-                }
+                const formData = buildFormData();
+                await saveAsset(formData);
+                showSuccess(formData.systemType);
+                form.reset();
             } catch (error) {
-                console.error('Error:', error);
-                showError('An error occurred. Please try again.');
+                console.error("Asset save error:", error);
+                showError(error.message || "An unexpected error occurred while saving the asset.");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Asset';
             }
         });
-
-        // Show success message
-        function showSuccess(systemType) {
-            const alert = document.getElementById('successAlert');
-            document.getElementById('sheetName').textContent = sheetMapping[systemType] || systemType;
-            alert.style.display = 'block';
-            alert.classList.add('show');
-        }
-
-        // Show error message
-        function showError(message) {
-            const alert = document.getElementById('errorAlert');
-            document.getElementById('errorMessage').textContent = message;
-            alert.style.display = 'block';
-            alert.classList.add('show');
-        }
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            await AFCAuth.requirePermission("add_asset");
+        });
+    </script>
+
 </body>
 </html>
