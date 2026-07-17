@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +13,16 @@
             --light-bg: #f5f5f5;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background-color: var(--light-bg);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
 
         .sidebar {
@@ -27,9 +33,10 @@
             position: fixed;
             left: 0;
             top: 0;
-            width: 200px;
+            width: 220px;
             overflow-y: auto;
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
 
         .sidebar .logo {
@@ -39,37 +46,60 @@
             padding-bottom: 15px;
         }
 
-        .sidebar a {
+        .sidebar .logo h5 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .sidebar .logo small {
             display: block;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
             color: white;
             text-decoration: none;
             margin: 15px 0;
-            padding: 12px;
+            padding: 12px 15px;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+            width: 20px;
         }
 
         .sidebar a:hover {
             background-color: var(--secondary-blue);
+            transform: translateX(5px);
         }
 
         .sidebar a.active {
             background-color: var(--secondary-blue);
             border-left: 4px solid #ffc107;
-            padding-left: 8px;
+            padding-left: 11px;
         }
 
         .main-content {
-            margin-left: 200px;
+            margin-left: 220px;
             padding: 30px;
+            width: calc(100% - 220px);
+            min-height: 100vh;
         }
 
         .page-header {
             background-color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
             margin-bottom: 30px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary-blue);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -82,9 +112,42 @@
             margin: 0;
         }
 
+        .page-subtitle {
+            color: #999;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .refresh-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
         .refresh-info {
             font-size: 12px;
             color: #999;
+        }
+
+        .btn-refresh {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-refresh:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            color: white;
         }
 
         .stats-grid {
@@ -98,52 +161,39 @@
             background-color: white;
             border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border-left: 4px solid var(--primary-blue);
+            transition: all 0.3s ease;
         }
 
-        .stat-card.ag {
-            border-left-color: #0c5460;
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        .stat-card.ncmc {
-            border-left-color: #155724;
-        }
-
-        .stat-card.qr {
-            border-left-color: #856404;
-        }
-
-        .stat-card.pinelab {
-            border-left-color: #721c24;
-        }
-
-        .stat-card.tvm {
-            border-left-color: #004085;
-        }
-
-        .stat-card.warning {
-            border-left-color: #ff6b6b;
-        }
+        .stat-card.ag { border-left-color: #0c5460; }
+        .stat-card.ncmc { border-left-color: #155724; }
+        .stat-card.qr { border-left-color: #856404; }
+        .stat-card.pinelab { border-left-color: #721c24; }
+        .stat-card.tvm { border-left-color: #004085; }
+        .stat-card.active { border-left-color: #28a745; }
+        .stat-card.maintenance { border-left-color: #ff6b6b; }
+        .stat-card.inactive { border-left-color: #ffc107; }
 
         .stat-label {
-            font-size: 13px;
+            font-size: 12px;
             color: #999;
             text-transform: uppercase;
             font-weight: 600;
             margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
 
         .stat-value {
             font-size: 36px;
             font-weight: 700;
             color: var(--primary-blue);
-        }
-
-        .stat-subtitle {
-            font-size: 12px;
-            color: #ccc;
-            margin-top: 10px;
+            margin-bottom: 8px;
         }
 
         .stat-icon {
@@ -152,23 +202,41 @@
             margin-bottom: 10px;
         }
 
+        .stat-subtitle {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 10px;
+        }
+
         .card {
             border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .card-header {
-            background-color: var(--primary-blue);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
             border-radius: 8px 8px 0 0;
             padding: 20px;
             font-weight: 600;
+            font-size: 16px;
+            border-bottom: none;
+        }
+
+        .card-header i {
+            margin-right: 10px;
         }
 
         .card-body {
-            padding: 20px;
+            padding: 25px;
         }
 
         .chart-container {
@@ -191,11 +259,19 @@
             color: var(--primary-blue);
             font-weight: 600;
             border-bottom: 2px solid #ddd;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         table td {
             padding: 12px 15px;
             border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        table tbody tr {
+            transition: background-color 0.15s ease;
         }
 
         table tbody tr:hover {
@@ -210,34 +286,11 @@
             font-size: 12px;
         }
 
-        .badge-ag {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .badge-ncmc {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .badge-qr {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .badge-pinelab {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .badge-tvm {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-
-        .progress-bar {
-            background-color: var(--primary-blue);
-        }
+        .badge-ag { background-color: #d1ecf1; color: #0c5460; }
+        .badge-ncmc { background-color: #d4edda; color: #155724; }
+        .badge-qr { background-color: #fff3cd; color: #856404; }
+        .badge-pinelab { background-color: #f8d7da; color: #721c24; }
+        .badge-tvm { background-color: #cce5ff; color: #004085; }
 
         .loading {
             text-align: center;
@@ -265,23 +318,47 @@
             color: #999;
         }
 
+        .row {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
-                width: 150px;
+                position: relative;
+                width: 100%;
+                height: auto;
+                margin-bottom: 20px;
             }
+
             .main-content {
-                margin-left: 150px;
+                margin-left: 0;
+                width: 100%;
                 padding: 15px;
             }
-            .page-title {
-                font-size: 20px;
-            }
-            .stat-value {
-                font-size: 28px;
-            }
+
             .page-header {
                 flex-direction: column;
                 gap: 10px;
+                text-align: center;
+            }
+
+            .page-title {
+                font-size: 20px;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .refresh-controls {
+                width: 100%;
+                flex-direction: column;
             }
         }
     </style>
@@ -293,14 +370,14 @@
             <h5><i class="fas fa-metro"></i> CMRL AFC</h5>
             <small>Asset Management</small>
         </div>
-        <a href="dashboard.html" class="nav-link active"><i class="fas fa-chart-line"></i> Dashboard</a>
-        <a href="asset_master.html" class="nav-link"><i class="fas fa-plus-circle"></i> Add Asset</a>
-        <a href="search.html" class="nav-link"><i class="fas fa-search"></i> Search</a>
-        <a href="spare_movement.html" class="nav-link"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
-        <a href="spare_inventory.html" class="nav-link"><i class="fas fa-boxes"></i> Spare Inventory</a>
-        <a href="reports.html" class="nav-link"><i class="fas fa-file-alt"></i> Reports</a>
-        <a href="users.html" class="nav-link"><i class="fas fa-users"></i> Users</a>
-        <a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+        <a href="dashboard.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="asset_master.html"><i class="fas fa-plus-circle"></i> Add Asset</a>
+        <a href="search.html"><i class="fas fa-search"></i> Search</a>
+        <a href="spare_movement.html"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
+        <a href="spare_inventory.html"><i class="fas fa-boxes"></i> Spare Inventory</a>
+        <a href="reports.html"><i class="fas fa-file-alt"></i> Reports</a>
+        <a href="users.html"><i class="fas fa-users"></i> Users</a>
+        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
     </div>
 
     <!-- Main Content -->
@@ -308,10 +385,11 @@
         <div class="page-header">
             <div>
                 <h1 class="page-title"><i class="fas fa-chart-line"></i> Dashboard</h1>
-                <small class="refresh-info">Auto-refreshing every 30 seconds</small>
+                <p class="page-subtitle">System statistics and overview</p>
             </div>
-            <div>
-                <button class="btn btn-primary btn-sm" onclick="loadDashboard()">
+            <div class="refresh-controls">
+                <div class="refresh-info" id="refreshInfo">Auto-refresh in 30s</div>
+                <button class="btn-refresh" onclick="loadDashboard()">
                     <i class="fas fa-sync-alt"></i> Refresh Now
                 </button>
             </div>
@@ -319,16 +397,15 @@
 
         <!-- Statistics Cards -->
         <div class="stats-grid" id="statsContainer">
-            <div class="stat-card">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                </div>
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p style="color: #999; margin-top: 15px;">Loading statistics...</p>
             </div>
         </div>
 
         <!-- Charts Row -->
         <div class="row" id="chartsContainer" style="display: none;">
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-pie-chart"></i> Assets by System Type
@@ -341,7 +418,7 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-map-marker-alt"></i> Top 5 Stations
@@ -358,7 +435,7 @@
         <!-- Recent Assets -->
         <div class="card" id="recentAssetsContainer" style="display: none;">
             <div class="card-header">
-                <i class="fas fa-clock"></i> Recent Assets (Last 10)
+                <i class="fas fa-clock"></i> Recent Asset Details (Last 10)
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -371,6 +448,7 @@
                                 <th>Station</th>
                                 <th>Status</th>
                                 <th>Added</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
                         <tbody id="recentTableBody"></tbody>
@@ -380,140 +458,343 @@
         </div>
     </div>
 
+    <script src="../auth.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
     <script>
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec';
+        const GOOGLE_SCRIPT_URL =
+            'https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec';
+
+        const SYSTEM_TYPES = ['AG', 'NCMC', 'QR', 'PINELAB', 'TVM'];
 
         let systemTypeChart = null;
         let topStationsChart = null;
         let allAssets = [];
+        let refreshTimer = null;
+        let countdownTimer = null;
+        let refreshSeconds = 30;
 
-        // Load dashboard data
+        function firstValue(source, keys, fallback = '') {
+            for (const key of keys) {
+                if (
+                    Object.prototype.hasOwnProperty.call(source, key) &&
+                    source[key] !== null &&
+                    source[key] !== undefined &&
+                    String(source[key]).trim() !== ''
+                ) {
+                    return source[key];
+                }
+            }
+            return fallback;
+        }
+
+        function normalizeSystemType(value) {
+            const text = String(value || '').trim().toUpperCase();
+
+            if (text === 'NCMC SYSTEM') return 'NCMC';
+            if (text === 'QR SYSTEM') return 'QR';
+            if (text === 'PINELAB QR' || text === 'PINELAB SYSTEM') return 'PINELAB';
+            if (text === 'TVM SYSTEM') return 'TVM';
+            if (text === 'AUTOMATIC GATE') return 'AG';
+
+            return text;
+        }
+
+        function normalizeStatus(value) {
+            const text = String(value || '').trim().toUpperCase();
+
+            if (!text) return 'UNKNOWN';
+            if (['WORKING', 'OPERATIONAL', 'HEALTHY', 'IN USE'].includes(text)) return 'ACTIVE';
+            if (['FAULTY', 'UNDER MAINTENANCE', 'REPAIR', 'UNDER REPAIR'].includes(text)) return 'MAINTENANCE';
+            if (['NOT IN USE', 'DISABLED'].includes(text)) return 'INACTIVE';
+
+            return text;
+        }
+
+        function normalizeAsset(rawAsset, inheritedSystemType = '') {
+            const asset = rawAsset || {};
+
+            const systemType = normalizeSystemType(
+                firstValue(asset, [
+                    'systemType',
+                    'System Type',
+                    'system',
+                    'System',
+                    'sheetName',
+                    'sheet'
+                ], inheritedSystemType)
+            );
+
+            const timestamp = firstValue(asset, [
+                'timestamp',
+                'Timestamp',
+                'createdAt',
+                'Created At',
+                'dateAdded',
+                'Date Added'
+            ]);
+
+            return {
+                ...asset,
+                timestamp,
+                assetId: String(firstValue(asset, [
+                    'assetId',
+                    'Asset ID',
+                    'Asset Id',
+                    'ASSET ID'
+                ])).trim(),
+                systemType,
+                equipmentType: String(firstValue(asset, [
+                    'equipmentType',
+                    'Equipment Type',
+                    'equipmentName',
+                    'Equipment Name',
+                    'Gate Type',
+                    'gateType'
+                ], systemType === 'AG' ? 'Automatic Gate' : '')).trim(),
+                station: String(firstValue(asset, [
+                    'station',
+                    'Station',
+                    'stationName',
+                    'Station Name',
+                    'Location',
+                    'location'
+                ])).trim(),
+                serialNumber: String(firstValue(asset, [
+                    'serialNumber',
+                    'Serial Number',
+                    'Device ID',
+                    'deviceId'
+                ])).trim(),
+                status: normalizeStatus(firstValue(asset, [
+                    'status',
+                    'Status',
+                    'assetStatus',
+                    'Asset Status'
+                ])),};
+        }
+
+        function extractAssets(payload) {
+            if (!payload) return [];
+
+            if (Array.isArray(payload)) {
+                return payload.map(item => normalizeAsset(item));
+            }
+
+            if (Array.isArray(payload.data)) {
+                return payload.data.map(item => normalizeAsset(item));
+            }
+
+            if (payload.data && typeof payload.data === 'object') {
+                const combined = [];
+
+                Object.entries(payload.data).forEach(([systemType, rows]) => {
+                    if (Array.isArray(rows)) {
+                        rows.forEach(row => combined.push(normalizeAsset(row, systemType)));
+                    }
+                });
+
+                if (combined.length) return combined;
+            }
+
+            const combined = [];
+
+            SYSTEM_TYPES.forEach(systemType => {
+                const possibleKeys = [
+                    systemType,
+                    systemType.toLowerCase(),
+                    `${systemType} system`,
+                    `${systemType} System`
+                ];
+
+                for (const key of possibleKeys) {
+                    if (Array.isArray(payload[key])) {
+                        payload[key].forEach(row => combined.push(normalizeAsset(row, systemType)));
+                        break;
+                    }
+                }
+            });
+
+            return combined;
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
         async function loadDashboard() {
+            const refreshButton = document.querySelector('.btn-refresh');
+
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getAll');
-                const data = await response.json();
-                allAssets = data.data || [];
+                if (refreshButton) {
+                    refreshButton.disabled = true;
+                    refreshButton.innerHTML =
+                        '<i class="fas fa-sync-alt fa-spin"></i> Refreshing';
+                }
+
+                showLoadingState();
+
+                const separator = GOOGLE_SCRIPT_URL.includes('?') ? '&' : '?';
+                const response = await fetch(
+                    `${GOOGLE_SCRIPT_URL}${separator}action=getAll&_=${Date.now()}`,
+                    {
+                        method: 'GET',
+                        cache: 'no-store',
+                        redirect: 'follow'
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Server returned HTTP ${response.status}`);
+                }
+
+                const text = await response.text();
+                let payload;
+
+                try {
+                    payload = JSON.parse(text);
+                } catch (error) {
+                    throw new Error(
+                        'Apps Script did not return valid JSON. Redeploy the web app and allow access to anyone.'
+                    );
+                }
+
+                if (payload && payload.success === false) {
+                    throw new Error(payload.message || payload.error || 'Unable to load asset data.');
+                }
+
+                allAssets = extractAssets(payload).filter(asset =>
+                    asset.assetId ||
+                    asset.station ||
+                    asset.equipmentType ||
+                    asset.serialNumber
+                );
 
                 calculateStats();
                 displayCharts();
                 displayRecentAssets();
+                updateRefreshInfo();
+                restartCountdown();
             } catch (error) {
-                console.error('Error loading dashboard:', error);
+                console.error('Dashboard loading error:', error);
+                showErrorState(error.message || 'Unable to load dashboard.');
+            } finally {
+                if (refreshButton) {
+                    refreshButton.disabled = false;
+                    refreshButton.innerHTML =
+                        '<i class="fas fa-sync-alt"></i> Refresh Now';
+                }
             }
         }
 
-        // Calculate statistics
-        function calculateStats() {
-            const totalAssets = allAssets.length;
-            const agAssets = allAssets.filter(a => a.systemType === 'AG').length;
-            const ncmcAssets = allAssets.filter(a => a.systemType === 'NCMC').length;
-            const qrAssets = allAssets.filter(a => a.systemType === 'QR').length;
-            const pinelabAssets = allAssets.filter(a => a.systemType === 'PINELAB').length;
-            const tvmAssets = allAssets.filter(a => a.systemType === 'TVM').length;
-            const maintenanceAssets = allAssets.filter(a => a.status === 'MAINTENANCE').length;
-            const inactiveAssets = allAssets.filter(a => a.status === 'INACTIVE').length;
-            const activeAssets = allAssets.filter(a => a.status === 'ACTIVE').length;
-
-            const statsHTML = `
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-cubes"></i></div>
-                    <div class="stat-label">Total Assets</div>
-                    <div class="stat-value">${totalAssets}</div>
-                    <div class="stat-subtitle">Across all systems</div>
+        function showLoadingState() {
+            document.getElementById('statsContainer').innerHTML = `
+                <div class="loading" style="grid-column: 1 / -1;">
+                    <div class="loading-spinner"></div>
+                    <p style="color:#999;margin-top:15px;">Loading statistics...</p>
                 </div>
+            `;
+        }
 
-                <div class="stat-card ag">
-                    <div class="stat-icon"><i class="fas fa-door-open"></i></div>
-                    <div class="stat-label">AG Systems</div>
-                    <div class="stat-value">${agAssets}</div>
-                    <div class="stat-subtitle">Automatic Gates</div>
-                </div>
-
-                <div class="stat-card ncmc">
-                    <div class="stat-icon"><i class="fas fa-id-card"></i></div>
-                    <div class="stat-label">NCMC Systems</div>
-                    <div class="stat-value">${ncmcAssets}</div>
-                    <div class="stat-subtitle">NCMC Equipment</div>
-                </div>
-
-                <div class="stat-card qr">
-                    <div class="stat-icon"><i class="fas fa-qrcode"></i></div>
-                    <div class="stat-label">QR Systems</div>
-                    <div class="stat-value">${qrAssets}</div>
-                    <div class="stat-subtitle">QR Equipment</div>
-                </div>
-
-                <div class="stat-card pinelab">
-                    <div class="stat-icon"><i class="fas fa-credit-card"></i></div>
-                    <div class="stat-label">Pinelab Systems</div>
-                    <div class="stat-value">${pinelabAssets}</div>
-                    <div class="stat-subtitle">Pinelab Equipment</div>
-                </div>
-
-                <div class="stat-card tvm">
-                    <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
-                    <div class="stat-label">TVM Systems</div>
-                    <div class="stat-value">${tvmAssets}</div>
-                    <div class="stat-subtitle">Ticket Vending Machines</div>
-                </div>
-
-                <div class="stat-card" style="border-left-color: #28a745;">
-                    <div class="stat-icon" style="color: #28a745;"><i class="fas fa-check-circle"></i></div>
-                    <div class="stat-label">Active Assets</div>
-                    <div class="stat-value" style="color: #28a745;">${activeAssets}</div>
-                    <div class="stat-subtitle">Currently operational</div>
-                </div>
-
-                <div class="stat-card warning">
-                    <div class="stat-icon" style="color: #ff6b6b;"><i class="fas fa-tools"></i></div>
-                    <div class="stat-label">In Maintenance</div>
-                    <div class="stat-value" style="color: #ff6b6b;">${maintenanceAssets}</div>
-                    <div class="stat-subtitle">Under repair/maintenance</div>
-                </div>
-
-                <div class="stat-card warning">
-                    <div class="stat-icon" style="color: #ffc107;"><i class="fas fa-pause-circle"></i></div>
-                    <div class="stat-label">Inactive Assets</div>
-                    <div class="stat-value" style="color: #ffc107;">${inactiveAssets}</div>
-                    <div class="stat-subtitle">Not in use</div>
+        function showErrorState(message) {
+            document.getElementById('statsContainer').innerHTML = `
+                <div class="alert alert-danger" style="grid-column:1 / -1;margin:0;">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Dashboard could not load.</strong>
+                    <div style="margin-top:8px;">${escapeHtml(message)}</div>
+                    <div style="margin-top:8px;font-size:13px;">
+                        Confirm that the Apps Script deployment is active and its access is set to
+                        <strong>Anyone</strong>.
+                    </div>
                 </div>
             `;
 
-            document.getElementById('statsContainer').innerHTML = statsHTML;
+            document.getElementById('chartsContainer').style.display = 'none';
+            document.getElementById('recentAssetsContainer').style.display = 'none';
+            document.getElementById('refreshInfo').textContent = 'Load failed';
+        }
+
+        function countBySystem(systemType) {
+            return allAssets.filter(asset => asset.systemType === systemType).length;
+        }
+
+        function countByStatus(status) {
+            return allAssets.filter(asset => asset.status === status).length;
+        }
+
+        function calculateStats() {
+            const stats = {
+                total: allAssets.length,
+                ag: countBySystem('AG'),
+                ncmc: countBySystem('NCMC'),
+                qr: countBySystem('QR'),
+                pinelab: countBySystem('PINELAB'),
+                tvm: countBySystem('TVM'),
+                active: countByStatus('ACTIVE'),
+                maintenance: countByStatus('MAINTENANCE'),
+                inactive: countByStatus('INACTIVE')
+            };
+
+            document.getElementById('statsContainer').innerHTML = `
+                ${buildStatCard('', 'fas fa-cubes', 'Total Assets', stats.total, 'Across all systems')}
+                ${buildStatCard('ag', 'fas fa-door-open', 'AG Systems', stats.ag, 'Automatic Gates', '#0c5460')}
+                ${buildStatCard('ncmc', 'fas fa-id-card', 'NCMC Systems', stats.ncmc, 'NCMC Equipment', '#155724')}
+                ${buildStatCard('qr', 'fas fa-qrcode', 'QR Systems', stats.qr, 'QR Equipment', '#856404')}
+                ${buildStatCard('pinelab', 'fas fa-credit-card', 'Pinelab Systems', stats.pinelab, 'Pinelab Equipment', '#721c24')}
+                ${buildStatCard('tvm', 'fas fa-ticket-alt', 'TVM Systems', stats.tvm, 'Ticket Vending Machines', '#004085')}
+                ${buildStatCard('active', 'fas fa-check-circle', 'Active Assets', stats.active, 'Currently operational', '#28a745')}
+                ${buildStatCard('maintenance', 'fas fa-tools', 'In Maintenance', stats.maintenance, 'Under repair or maintenance', '#ff6b6b')}
+                ${buildStatCard('inactive', 'fas fa-pause-circle', 'Inactive Assets', stats.inactive, 'Not currently in use', '#ffc107')}
+            `;
+
             document.getElementById('chartsContainer').style.display = 'flex';
             document.getElementById('recentAssetsContainer').style.display = 'block';
         }
 
-        // Display charts
+        function buildStatCard(cssClass, icon, label, value, subtitle, color = '') {
+            const colorStyle = color ? `style="color:${color};"` : '';
+
+            return `
+                <div class="stat-card ${cssClass}">
+                    <div class="stat-icon" ${colorStyle}><i class="${icon}"></i></div>
+                    <div class="stat-label">${escapeHtml(label)}</div>
+                    <div class="stat-value" ${colorStyle}>${Number(value) || 0}</div>
+                    <div class="stat-subtitle">${escapeHtml(subtitle)}</div>
+                </div>
+            `;
+        }
+
         function displayCharts() {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js could not be loaded.');
+                return;
+            }
+
             displaySystemTypeChart();
             displayTopStationsChart();
         }
 
-        // System Type Chart
         function displaySystemTypeChart() {
-            const systemCounts = {
-                'AG': allAssets.filter(a => a.systemType === 'AG').length,
-                'NCMC': allAssets.filter(a => a.systemType === 'NCMC').length,
-                'QR': allAssets.filter(a => a.systemType === 'QR').length,
-                'PINELAB': allAssets.filter(a => a.systemType === 'PINELAB').length,
-                'TVM': allAssets.filter(a => a.systemType === 'TVM').length
-            };
+            const canvas = document.getElementById('systemTypeChart');
+            if (!canvas) return;
 
-            const ctx = document.getElementById('systemTypeChart').getContext('2d');
-            
+            const counts = SYSTEM_TYPES.map(type => countBySystem(type));
+
             if (systemTypeChart) {
                 systemTypeChart.destroy();
             }
 
-            systemTypeChart = new Chart(ctx, {
+            systemTypeChart = new Chart(canvas.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: Object.keys(systemCounts),
+                    labels: SYSTEM_TYPES,
                     datasets: [{
-                        data: Object.values(systemCounts),
+                        data: counts,
                         backgroundColor: [
                             '#0c5460',
                             '#155724',
@@ -521,7 +802,7 @@
                             '#721c24',
                             '#004085'
                         ],
-                        borderColor: '#fff',
+                        borderColor: '#ffffff',
                         borderWidth: 2
                     }]
                 },
@@ -530,49 +811,63 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    size: 12,
+                                    weight: '600'
+                                }
+                            }
                         }
                     }
                 }
             });
         }
 
-        // Top 5 Stations Chart
         function displayTopStationsChart() {
+            const canvas = document.getElementById('topStationsChart');
+            if (!canvas) return;
+
             const stationCounts = {};
+
             allAssets.forEach(asset => {
                 const station = asset.station || 'Unknown';
                 stationCounts[station] = (stationCounts[station] || 0) + 1;
             });
 
-            // Get top 5 stations
             const topStations = Object.entries(stationCounts)
                 .sort((a, b) => b[1] - a[1])
-                .slice(0, 5)
-                .reduce((obj, [key, val]) => { obj[key] = val; return obj; }, {});
+                .slice(0, 5);
 
-            const ctx = document.getElementById('topStationsChart').getContext('2d');
-            
+            const labels = topStations.length
+                ? topStations.map(([station]) => station)
+                : ['No data'];
+
+            const values = topStations.length
+                ? topStations.map(([, count]) => count)
+                : [0];
+
             if (topStationsChart) {
                 topStationsChart.destroy();
             }
 
-            topStationsChart = new Chart(ctx, {
+            topStationsChart = new Chart(canvas.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(topStations),
+                    labels,
                     datasets: [{
                         label: 'Number of Assets',
-                        data: Object.values(topStations),
+                        data: values,
                         backgroundColor: '#0d47a1',
                         borderColor: '#0d47a1',
-                        borderWidth: 1
+                        borderWidth: 1,
+                        borderRadius: 6
                     }]
                 },
                 options: {
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
-                    indexAxis: 'y',
                     plugins: {
                         legend: {
                             display: false
@@ -580,53 +875,113 @@
                     },
                     scales: {
                         x: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
                         }
                     }
                 }
             });
         }
 
-        // Display recent assets
+        function parseDate(value) {
+            if (!value) return null;
+
+            const date = new Date(value);
+            return Number.isNaN(date.getTime()) ? null : date;
+        }
+
         function displayRecentAssets() {
-            // Sort by timestamp (newest first)
-            const recent = allAssets
+            const recent = [...allAssets]
                 .sort((a, b) => {
-                    const timeA = new Date(a.timestamp || 0);
-                    const timeB = new Date(b.timestamp || 0);
-                    return timeB - timeA;
+                    const dateA = parseDate(a.timestamp);
+                    const dateB = parseDate(b.timestamp);
+
+                    return (dateB?.getTime() || 0) - (dateA?.getTime() || 0);
                 })
                 .slice(0, 10);
 
-            let html = '';
-            recent.forEach(asset => {
-                const systemBadgeClass = `badge-${asset.systemType.toLowerCase()}`;
-                const statusClass = asset.status === 'ACTIVE' ? 'success' : 'danger';
-                const timeAgo = formatTimeAgo(new Date(asset.timestamp || 0));
+            const body = document.getElementById('recentTableBody');
 
-                html += `
+            if (!recent.length) {
+                body.innerHTML = `
                     <tr>
-                        <td><strong>${asset.assetId || 'N/A'}</strong></td>
-                        <td><span class="badge-system ${systemBadgeClass}">${asset.systemType || 'N/A'}</span></td>
-                        <td>${asset.equipmentType || 'N/A'}</td>
-                        <td>${asset.station || 'N/A'}</td>
-                        <td><span class="badge bg-${statusClass}">${asset.status || 'N/A'}</span></td>
-                        <td><small>${timeAgo}</small></td>
+                        <td colspan="7" class="text-center text-muted">
+                            No assets have been added yet.
+                        </td>
                     </tr>
                 `;
-            });
-
-            if (recent.length === 0) {
-                html = '<tr><td colspan="6" class="text-center text-muted">No assets yet</td></tr>';
+                return;
             }
 
-            document.getElementById('recentTableBody').innerHTML = html;
+            body.innerHTML = recent.map(asset => {
+                const systemType = SYSTEM_TYPES.includes(asset.systemType)
+                    ? asset.systemType
+                    : 'UNKNOWN';
+
+                const systemClass = SYSTEM_TYPES.includes(systemType)
+                    ? `badge-${systemType.toLowerCase()}`
+                    : '';
+
+                return `
+                    <tr>
+                        <td>
+                            <a href="search.html?assetId=${encodeURIComponent(asset.assetId)}"
+                               title="View complete asset details"
+                               style="color:#0d47a1;text-decoration:none;">
+                                <strong>${escapeHtml(asset.assetId || 'N/A')}</strong>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge-system ${systemClass}">
+                                ${escapeHtml(systemType)}
+                            </span>
+                        </td>
+                        <td>${escapeHtml(asset.equipmentType || 'N/A')}</td>
+                        <td>${escapeHtml(asset.station || 'N/A')}</td>
+                        <td>${buildStatusBadge(asset.status)}</td>
+                        <td><small>${escapeHtml(formatTimeAgo(parseDate(asset.timestamp)))}</small></td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary"
+                               href="search.html?assetId=${encodeURIComponent(asset.assetId)}"
+                               title="View full details">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
-        // Format time ago
+        function buildStatusBadge(status) {
+            const normalized = normalizeStatus(status);
+
+            const classes = {
+                ACTIVE: 'bg-success',
+                MAINTENANCE: 'bg-warning text-dark',
+                INACTIVE: 'bg-secondary',
+                DECOMMISSIONED: 'bg-danger',
+                UNKNOWN: 'bg-light text-dark'
+            };
+
+            return `
+                <span class="badge ${classes[normalized] || 'bg-info text-dark'}">
+                    ${escapeHtml(normalized)}
+                </span>
+            `;
+        }
+
         function formatTimeAgo(date) {
+            if (!date) return 'Date unavailable';
+
             const now = new Date();
-            const seconds = Math.floor((now - date) / 1000);
+            const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+            if (seconds < 0) {
+                return date.toLocaleDateString();
+            }
+
             const minutes = Math.floor(seconds / 60);
             const hours = Math.floor(minutes / 60);
             const days = Math.floor(hours / 24);
@@ -635,17 +990,47 @@
             if (minutes < 60) return `${minutes}m ago`;
             if (hours < 24) return `${hours}h ago`;
             if (days < 7) return `${days}d ago`;
-            
+
             return date.toLocaleDateString();
         }
 
-        // Load dashboard on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            loadDashboard();
-            
-            // Auto-refresh every 30 seconds
-            setInterval(loadDashboard, 30000);
+        function updateRefreshInfo() {
+            document.getElementById('refreshInfo').textContent =
+                `Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        function restartCountdown() {
+            refreshSeconds = 30;
+
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+            }
+
+            countdownTimer = setInterval(() => {
+                refreshSeconds -= 1;
+
+                if (refreshSeconds > 0) {
+                    document.getElementById('refreshInfo').textContent =
+                        `Auto-refresh in ${refreshSeconds}s`;
+                }
+            }, 1000);
+
+            if (refreshTimer) {
+                clearTimeout(refreshTimer);
+            }
+
+            refreshTimer = setTimeout(loadDashboard, 30000);
+        }
+
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            await AFCAuth.requirePermission("dashboard");
         });
     </script>
+
 </body>
 </html>
