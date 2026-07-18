@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports - CMRL AFC Asset Management</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--p:#0d47a1;--s:#1565c0;--bg:#f4f6f9}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Segoe UI,Tahoma,sans-serif;color:#263238}.sidebar{position:fixed;inset:0 auto 0 0;width:220px;background:linear-gradient(180deg,#0d47a1,#174f9d);color:#fff;padding:20px 17px;overflow:auto}.logo{text-align:center;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid #ffffff40}.logo h5{margin:0;font-weight:800}.logo small{display:block;margin-top:6px}.nav-link{display:flex;gap:12px;align-items:center;color:#fff;text-decoration:none;padding:12px 14px;margin:8px 0;border-radius:7px}.nav-link:hover,.nav-link.active{background:#2165bd;color:#fff}.nav-link.active{border-left:4px solid #ffc107;padding-left:10px}.main{margin-left:220px;padding:30px}.head,.card,.stat{background:#fff;border-radius:10px;box-shadow:0 2px 9px #00000012}.head{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:24px 26px;border-left:4px solid var(--p);margin-bottom:22px}.title{margin:0;color:var(--p);font-size:28px;font-weight:800}.sub{margin:5px 0 0;color:#82909e;font-size:14px}.card{border:0;margin-bottom:22px;overflow:hidden}.card-header{background:linear-gradient(135deg,var(--p),var(--s));color:#fff;font-weight:700;padding:17px 21px}.card-body{padding:22px}.form-label{font-weight:700;color:var(--p);font-size:13px}.form-control,.form-select{min-height:43px;border-radius:7px}.btnx{border:0;border-radius:7px;padding:10px 16px;font-weight:700}.primary{background:var(--p);color:#fff}.soft{background:#e9f1fb;color:var(--p)}.good{background:#e7f6ed;color:#157347}.toolbar{display:flex;gap:10px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px}.stat{padding:18px;border-left:4px solid var(--p)}.stat span{font-size:13px;color:#7d8995}.stat strong{display:block;color:var(--p);font-size:27px;margin-top:5px}.table-wrap{overflow:auto}.table th{background:#eef4fb;color:var(--p);font-size:12px;white-space:nowrap}.table td{font-size:13px;white-space:nowrap}.empty{text-align:center;padding:40px;color:#8493a2}.msg{display:none;padding:14px;border-radius:8px;margin-bottom:18px}.msg.show{display:block}.success{background:#dff3e7;color:#146c43}.danger{background:#fde2e4;color:#842029}.warning{background:#fff3cd;color:#664d03}@media(max-width:768px){.sidebar{position:relative;width:100%}.main{margin-left:0;padding:15px}.head{flex-direction:column;align-items:flex-start}.stats{grid-template-columns:1fr 1fr}}@media(max-width:480px){.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+<div class="logo"><h5><i class="fas fa-metro"></i> CMRL AFC</h5><small>Asset Management</small></div>
+<a class="nav-link" href="dashboard.html"><i class="fas fa-chart-line"></i>Dashboard</a>
+<a class="nav-link" href="asset_master.html"><i class="fas fa-plus-circle"></i>Add Asset</a>
+<a class="nav-link" href="search.html"><i class="fas fa-search"></i>Search</a>
+<a class="nav-link" href="spare_movement.html"><i class="fas fa-exchange-alt"></i>Spare Movement</a>
+<a class="nav-link" href="spare_inventory.html"><i class="fas fa-boxes"></i>Spare Inventory</a>
+<a class="nav-link active" href="reports.html"><i class="fas fa-file-alt"></i>Reports</a>
+<a class="nav-link" href="users.html"><i class="fas fa-users"></i>Users</a>
+<a class="nav-link" href="settings.html"><i class="fas fa-cog"></i>Settings</a>
+</aside>
+<main class="main">
+<div class="head"><div><h1 class="title"><i class="fas fa-file-alt"></i> Reports</h1><p class="sub">Filter, review and export AFC asset information</p></div><div class="toolbar"><button class="btnx soft" onclick="window.print()"><i class="fas fa-print"></i> Print</button><button class="btnx good" onclick="exportCSV()"><i class="fas fa-file-excel"></i> Export CSV</button><button class="btnx primary" onclick="loadReport()"><i class="fas fa-sync"></i> Refresh</button></div></div>
+<div id="msg" class="msg"></div>
+<section class="card"><div class="card-header"><i class="fas fa-filter"></i> Report Filters</div><div class="card-body"><div class="row g-3"><div class="col-md-3"><label class="form-label">System Type</label><select id="systemFilter" class="form-select"><option value="">All Systems</option><option value="AG">AG</option><option value="NCMC">NCMC</option><option value="QR">QR</option><option value="PINELAB">Pinelab QR</option><option value="TVM">TVM</option></select></div><div class="col-md-3"><label class="form-label">Station</label><input id="stationFilter" class="form-control" placeholder="Station code or name"></div><div class="col-md-3"><label class="form-label">Status</label><select id="statusFilter" class="form-select"><option value="">All Status</option><option value="ACTIVE">ACTIVE</option><option value="INACTIVE">INACTIVE</option><option value="MAINTENANCE">MAINTENANCE</option><option value="DECOMMISSIONED">DECOMMISSIONED</option></select></div><div class="col-md-3"><label class="form-label">Search</label><input id="textFilter" class="form-control" placeholder="Asset ID, serial, equipment"></div></div><div class="toolbar mt-3"><button class="btnx primary" onclick="applyFilters()"><i class="fas fa-search"></i> Apply</button><button class="btnx soft" onclick="resetFilters()"><i class="fas fa-redo"></i> Reset</button></div></div></section>
+<div class="stats"><div class="stat"><span>Total Assets</span><strong id="totalCount">0</strong></div><div class="stat"><span>Active</span><strong id="activeCount">0</strong></div><div class="stat"><span>Maintenance</span><strong id="maintenanceCount">0</strong></div><div class="stat"><span>Stations Covered</span><strong id="stationCount">0</strong></div></div>
+<section class="card"><div class="card-header d-flex justify-content-between"><span><i class="fas fa-table"></i> Asset Report</span><span id="resultCount">0 records</span></div><div class="table-wrap"><table class="table mb-0"><thead><tr><th>#</th><th>Asset ID</th><th>System</th><th>Equipment Type</th><th>Station</th><th>Serial Number</th><th>Location</th><th>Status</th><th>Install Date</th></tr></thead><tbody id="reportBody"></tbody></table><div id="empty" class="empty"><i class="fas fa-database fa-2x"></i><div class="mt-2">No records loaded.</div></div></div></section>
+</main>
+<script src="../auth.js"></script>
+<script>
+"use strict";
+const URL_APP="https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec";
+let allRecords=[];
+let filteredRecords=[];
+function getToken(){return (window.AFCAuth&&AFCAuth.token())||localStorage.getItem("afc_auth_token")||"";}
+document.addEventListener("DOMContentLoaded",async function(){const allowed=await AFCAuth.requirePermission("reports");if(allowed)loadReport();});
+function showMessage(type,text){const el=document.getElementById("msg");el.className="msg show "+type;el.textContent=text;setTimeout(function(){el.classList.remove("show");},4500);}
+function pick(obj,keys){for(const key of keys){if(obj&&obj[key]!==undefined&&obj[key]!==null)return obj[key];}return "";}
+async function apiCall(action){
+ const url=new URL(URL_APP);
+ url.searchParams.set("action",action);
+ url.searchParams.set("token",getToken());
+ url.searchParams.set("_",Date.now());
+ const response=await fetch(url.toString(),{method:"GET",cache:"no-store",redirect:"follow"});
+ const text=await response.text();
+ let result;
+ try{result=JSON.parse(text);}catch(e){throw new Error("Invalid response received from Apps Script.");}
+ if(!response.ok)throw new Error("HTTP "+response.status);
+ return result;
+}
+async function loadReport(){showMessage("warning","Loading report data...");let result=null;let errorText="";for(const action of ["getAll"]){try{const response=await apiCall(action);if(response&&response.error==="LOGIN_REQUIRED"){AFCAuth.clearSession();location.href="../index.html";return;}const rows=Array.isArray(response)?response:(response&&Array.isArray(response.data)?response.data:response&&Array.isArray(response.assets)?response.assets:response&&Array.isArray(response.records)?response.records:null);if(rows){result=rows;break;}errorText=(response&&response.error)||errorText;}catch(e){errorText=e.message;}}
+allRecords=result||[];applyFilters();showMessage(result?"success":"danger",result?(allRecords.length+" record(s) loaded."):(errorText||"Unable to load data."));}
+function applyFilters(){const sys=document.getElementById("systemFilter").value.toUpperCase();const station=document.getElementById("stationFilter").value.toLowerCase().trim();const status=document.getElementById("statusFilter").value.toUpperCase();const query=document.getElementById("textFilter").value.toLowerCase().trim();filteredRecords=allRecords.filter(function(r){const rs=String(pick(r,["systemType","System Type","system","System"])).toUpperCase();const rst=String(pick(r,["station","Station","Station Name"])).toLowerCase();const rstatus=String(pick(r,["status","Status"])).toUpperCase();const hay=JSON.stringify(r).toLowerCase();return(!sys||rs===sys)&&(!station||rst.includes(station))&&(!status||rstatus===status)&&(!query||hay.includes(query));});render();}
+function resetFilters(){document.getElementById("systemFilter").value="";document.getElementById("stationFilter").value="";document.getElementById("statusFilter").value="";document.getElementById("textFilter").value="";applyFilters();}
+function esc(value){return String(value??"").replace(/[&<>"']/g,function(ch){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch];});}
+function render(){const body=document.getElementById("reportBody");body.innerHTML=filteredRecords.map(function(r,i){return `<tr><td>${i+1}</td><td><strong>${esc(pick(r,["assetId","Asset ID","AssetID"]))}</strong></td><td>${esc(pick(r,["systemType","System Type","system","System"]))}</td><td>${esc(pick(r,["equipmentType","Equipment Type"]))}</td><td>${esc(pick(r,["station","Station","Station Name"]))}</td><td>${esc(pick(r,["serialNumber","Serial Number"]))}</td><td>${esc(pick(r,["location","Location"]))}</td><td>${esc(pick(r,["status","Status"]))}</td><td>${esc(pick(r,["installDate","Install Date","Installation Date"]))}</td></tr>`;}).join("");document.getElementById("empty").style.display=filteredRecords.length?"none":"block";document.getElementById("resultCount").textContent=filteredRecords.length+" records";document.getElementById("totalCount").textContent=filteredRecords.length;document.getElementById("activeCount").textContent=filteredRecords.filter(function(r){return String(pick(r,["status","Status"])).toUpperCase()==="ACTIVE";}).length;document.getElementById("maintenanceCount").textContent=filteredRecords.filter(function(r){return String(pick(r,["status","Status"])).toUpperCase()==="MAINTENANCE";}).length;document.getElementById("stationCount").textContent=new Set(filteredRecords.map(function(r){return String(pick(r,["station","Station","Station Name"])).trim();}).filter(Boolean)).size;}
+function exportCSV(){if(!filteredRecords.length){showMessage("warning","No records to export.");return;}const headers=["Asset ID","System","Equipment Type","Station","Serial Number","Location","Status","Install Date"];const rows=filteredRecords.map(function(r){return[pick(r,["assetId","Asset ID"]),pick(r,["systemType","System Type","System"]),pick(r,["equipmentType","Equipment Type"]),pick(r,["station","Station","Station Name"]),pick(r,["serialNumber","Serial Number"]),pick(r,["location","Location"]),pick(r,["status","Status"]),pick(r,["installDate","Install Date","Installation Date"])];});const csv=[headers].concat(rows).map(function(row){return row.map(function(v){return '"'+String(v??"").replace(/"/g,'""')+'"';}).join(",");}).join("\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download="CMRL_AFC_Report_"+new Date().toISOString().slice(0,10)+".csv";link.click();URL.revokeObjectURL(link.href);}
+</script>
+</body>
+</html>
