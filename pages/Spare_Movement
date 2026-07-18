@@ -3,247 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spare Movement - CMRL AFC Asset Management</title>
+    <title>Users - CMRL AFC Asset Management</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-blue: #0d47a1;
-            --secondary-blue: #1565c0;
-            --light-bg: #f5f5f5;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            margin: 0;
-            background: var(--light-bg);
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
-        }
-
-        .sidebar {
-            position: fixed;
-            inset: 0 auto 0 0;
-            width: 220px;
-            height: 100vh;
-            overflow-y: auto;
-            padding: 20px;
-            background: var(--primary-blue);
-            color: white;
-            box-shadow: 2px 0 5px rgba(0,0,0,.1);
-            z-index: 1000;
-        }
-
-        .logo {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            text-align: center;
-            border-bottom: 2px solid rgba(255,255,255,.2);
-        }
-
-        .logo h5 { margin: 0; font-size: 18px; font-weight: 700; }
-        .logo small { display: block; margin-top: 5px; opacity: .9; }
-
-        .sidebar a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 15px 0;
-            padding: 12px 15px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .sidebar a i { width: 20px; }
-        .sidebar a:hover { background: var(--secondary-blue); }
-        .sidebar a.active {
-            padding-left: 11px;
-            background: var(--secondary-blue);
-            border-left: 4px solid #ffc107;
-        }
-
-        .main-content {
-            margin-left: 220px;
-            min-height: 100vh;
-            padding: 30px;
-        }
-
-        .page-header,
-        .card {
-            background: white;
-            border: 0;
-            border-radius: 9px;
-            box-shadow: 0 2px 8px rgba(0,0,0,.1);
-        }
-
-        .page-header {
-            margin-bottom: 25px;
-            padding: 25px;
-            border-left: 4px solid var(--primary-blue);
-        }
-
-        .page-title {
-            margin: 0;
-            color: var(--primary-blue);
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .page-subtitle { margin: 6px 0 0; color: #777; font-size: 14px; }
-
-        .card { margin-bottom: 25px; }
-        .card-header {
-            padding: 18px 22px;
-            color: white;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            border-radius: 9px 9px 0 0 !important;
-        }
-
-        .card-body { padding: 24px; }
-
-        .form-label {
-            color: var(--primary-blue);
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .form-control, .form-select {
-            min-height: 44px;
-            border-radius: 6px;
-        }
-
-        .form-control[readonly],
-        .form-select:disabled {
-            background-color: #eef1f5;
-        }
-
-        .search-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 15px;
-        }
-
-        .btn-main {
-            min-height: 44px;
-            padding: 10px 22px;
-            border: 0;
-            border-radius: 6px;
-            color: white;
-            background: var(--primary-blue);
-            font-weight: 600;
-        }
-
-        .btn-main:hover { background: var(--secondary-blue); color: white; }
-
-        .result-count {
-            margin-bottom: 15px;
-            padding: 12px 15px;
-            border-left: 4px solid var(--primary-blue);
-            background: #eaf3ff;
-            border-radius: 6px;
-            color: var(--primary-blue);
-            font-weight: 600;
-        }
-
-        .result-table th {
-            white-space: nowrap;
-            color: var(--primary-blue);
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .result-table td { vertical-align: middle; font-size: 13px; }
-
-        .move-select-btn {
-            border: 0;
-            padding: 7px 12px;
-            border-radius: 5px;
-            color: white;
-            background: #198754;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .current-record {
-            display: none;
-            margin-top: 20px;
-            padding: 18px;
-            border-left: 4px solid #198754;
-            border-radius: 7px;
-            background: #eefaf3;
-        }
-
-        .current-record.show { display: block; }
-
-        .record-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 12px;
-        }
-
-        .record-box {
-            padding: 12px 14px;
-            border: 1px solid #dcece2;
-            border-radius: 6px;
-            background: white;
-        }
-
-        .record-label {
-            display: block;
-            margin-bottom: 4px;
-            color: #777;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .record-value { font-size: 14px; font-weight: 600; }
-
-        .movement-flow {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 15px;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .location-card {
-            min-height: 105px;
-            padding: 18px;
-            border: 1px solid #e4e4e4;
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .location-card.to { border-color: #9fc4f1; background: #f5f9ff; }
-        .flow-arrow { color: var(--primary-blue); font-size: 28px; }
-
-        .history-table th {
-            white-space: nowrap;
-            color: var(--primary-blue);
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .history-table td { vertical-align: middle; font-size: 13px; }
-
-        .empty-state {
-            padding: 35px;
-            color: #888;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar { position: relative; width: 100%; height: auto; }
-            .main-content { margin-left: 0; padding: 15px; }
-            .movement-flow { grid-template-columns: 1fr; }
-            .flow-arrow { transform: rotate(90deg); text-align: center; }
-            .page-title { font-size: 21px; }
-        }
+        :root { --primary-blue:#0d47a1; --secondary-blue:#1565c0; --light-bg:#f5f5f5; }
+        * { box-sizing:border-box; }
+        body { margin:0;background:var(--light-bg);font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif; }
+        .sidebar { position:fixed;inset:0 auto 0 0;width:220px;height:100vh;overflow-y:auto;padding:20px;background:var(--primary-blue);color:#fff; }
+        .logo { margin-bottom:30px;padding-bottom:15px;text-align:center;border-bottom:2px solid rgba(255,255,255,.2); }
+        .logo h5 { margin:0;font-weight:700; }
+        .logo small { display:block;margin-top:5px;opacity:.9; }
+        .sidebar a { display:flex;align-items:center;gap:10px;margin:15px 0;padding:12px 15px;color:#fff;text-decoration:none;border-radius:5px;font-size:14px; }
+        .sidebar a i { width:20px; }
+        .sidebar a:hover,.sidebar a.active { background:var(--secondary-blue); }
+        .sidebar a.active { border-left:4px solid #ffc107;padding-left:11px; }
+        .main-content { margin-left:220px;min-height:100vh;padding:30px; }
+        .page-header,.card { background:#fff;border:0;border-radius:9px;box-shadow:0 2px 8px rgba(0,0,0,.1); }
+        .page-header { display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px;padding:25px;border-left:4px solid var(--primary-blue); }
+        .page-title { margin:0;color:var(--primary-blue);font-size:28px;font-weight:700; }
+        .page-subtitle { margin:6px 0 0;color:#777;font-size:14px; }
+        .card-header { padding:18px 22px;color:#fff;font-weight:600;background:linear-gradient(135deg,var(--primary-blue),var(--secondary-blue)); }
+        .card-body { padding:24px; }
+        .btn-main,.btn-success-custom,.btn-danger-custom,.btn-secondary-custom { border:0;padding:10px 17px;border-radius:6px;color:#fff;font-weight:600; }
+        .btn-main { background:var(--primary-blue); }
+        .btn-success-custom { background:#198754; }
+        .btn-danger-custom { background:#dc3545; }
+        .btn-secondary-custom { background:#6c757d; }
+        .user-table th { white-space:nowrap;color:var(--primary-blue);font-size:12px;text-transform:uppercase; }
+        .user-table td { vertical-align:middle;font-size:13px; }
+        .modal-overlay { position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55); }
+        .modal-overlay.show { display:flex; }
+        .modal-box { width:min(850px,100%);max-height:94vh;overflow:hidden;background:#fff;border-radius:12px; }
+        .modal-header-custom { display:flex;justify-content:space-between;align-items:center;padding:18px 24px;color:#fff;background:linear-gradient(135deg,var(--primary-blue),var(--secondary-blue)); }
+        .modal-header-custom h3 { margin:0;font-size:20px; }
+        .modal-close { border:0;background:transparent;color:#fff;font-size:28px; }
+        .modal-body-custom { max-height:calc(94vh - 135px);overflow-y:auto;padding:24px; }
+        .modal-footer-custom { display:flex;justify-content:flex-end;gap:10px;padding:15px 24px;border-top:1px solid #eee;background:#fafafa; }
+        .permission-grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px; }
+        .permission-item { padding:10px;border:1px solid #ddd;border-radius:6px;background:#fafafa; }
+        @media(max-width:768px){ .sidebar{position:relative;width:100%;height:auto}.main-content{margin-left:0;padding:15px}.page-header{flex-direction:column;align-items:stretch}.page-title{font-size:21px} }
     </style>
 </head>
 <body>
@@ -255,760 +54,295 @@
         <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
         <a href="asset_master.html"><i class="fas fa-plus-circle"></i> Add Asset</a>
         <a href="search.html"><i class="fas fa-search"></i> Search</a>
-        <a href="spare_movement.html" class="active"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
+        <a href="spare_movement.html"><i class="fas fa-exchange-alt"></i> Spare Movement</a>
         <a href="spare_inventory.html"><i class="fas fa-boxes"></i> Spare Inventory</a>
         <a href="reports.html"><i class="fas fa-file-alt"></i> Reports</a>
-        <a href="users.html"><i class="fas fa-users"></i> Users</a>
+        <a href="users.html" class="active"><i class="fas fa-users"></i> Users</a>
         <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
     </aside>
 
     <main class="main-content">
         <section class="page-header">
-            <h1 class="page-title"><i class="fas fa-exchange-alt"></i> Asset / Spare Movement</h1>
-            <p class="page-subtitle">
-                Search by Asset ID, Serial Number, Equipment Type, Station, or Device ID.
-            </p>
+            <div>
+                <h1 class="page-title"><i class="fas fa-users-cog"></i> User Account Control</h1>
+                <p class="page-subtitle">Create users, assign roles and permissions, and control login access.</p>
+            </div>
+            <button class="btn-success-custom" onclick="openUserForm()">
+                <i class="fas fa-user-plus"></i> Add User
+            </button>
         </section>
 
         <div id="messageBox"></div>
 
         <section class="card">
-            <div class="card-header"><i class="fas fa-search"></i> Search Asset or Spare</div>
-            <div class="card-body">
-                <div class="search-grid">
-                    <div>
-                        <label class="form-label">System Type <span class="text-danger">*</span></label>
-                        <select id="systemType" class="form-select">
-                            <option value="">-- Select System --</option>
-                            <option value="AG">AG</option>
-                            <option value="NCMC">NCMC</option>
-                            <option value="QR">QR</option>
-                            <option value="PINELAB">Pinelab QR</option>
-                            <option value="TVM">TVM</option>
-                            <option value="SPARE">Spare Inventory</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label">Station</label>
-                        <select id="station" class="form-select" disabled>
-                            <option value="">-- All Stations --</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label">Equipment Type</label>
-                        <select id="equipmentType" class="form-select" disabled>
-                            <option value="">-- All Equipment --</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label">Asset / Spare ID</label>
-                        <select id="assetId" class="form-select" disabled>
-                            <option value="">-- Select Asset / Spare --</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label">Serial Number</label>
-                        <input id="serialNumber" class="form-control" readonly>
-                    </div>
-                    <div>
-                        <label class="form-label">Device ID</label>
-                        <input id="deviceId" class="form-control" readonly>
-                    </div>
-                    <div>
-                        <label class="form-label">Status</label>
-                        <input id="selectedStatus" class="form-control" readonly>
-                    </div>
-                    <div>
-                        <label class="form-label">Current Location</label>
-                        <input id="selectedCurrentLocation" class="form-control" readonly>
-                    </div>
-                    <div>
-                        <label class="form-label">General Search</label>
-                        <input id="keyword" class="form-control"
-                               placeholder="Optional keyword search">
-                    </div>
-                </div>
-
-                <div class="mt-3 d-flex gap-2 flex-wrap">
-                    <button id="searchBtn" type="button" class="btn-main" onclick="searchItems()">
-                        <i class="fas fa-search"></i> Search
-                    </button>
-                    <button type="button" class="btn btn-secondary" onclick="resetSearch()">
-                        <i class="fas fa-redo"></i> Reset
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <section id="resultsCard" class="card" style="display:none;">
-            <div class="card-header"><i class="fas fa-list"></i> Search Results</div>
-            <div class="card-body">
-                <div id="resultCount" class="result-count"></div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover result-table">
-                        <thead>
-                            <tr>
-                                <th>Asset / Spare ID</th>
-                                <th>Type</th>
-                                <th>System</th>
-                                <th>Equipment Type</th>
-                                <th>Serial Number</th>
-                                <th>Device ID</th>
-                                <th>Station</th>
-                                <th>Current Location</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resultsBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <section id="selectedCard" class="card" style="display:none;">
-            <div class="card-header"><i class="fas fa-check-circle"></i> Selected Item</div>
-            <div class="card-body">
-                <div id="currentRecord" class="current-record show">
-                    <div class="record-grid">
-                        <div class="record-box"><span class="record-label">Item ID</span><span id="recordItemId" class="record-value"></span></div>
-                        <div class="record-box"><span class="record-label">Item Type</span><span id="recordItemType" class="record-value"></span></div>
-                        <div class="record-box"><span class="record-label">System</span><span id="recordSystem" class="record-value"></span></div>
-                        <div class="record-box"><span class="record-label">Equipment Type</span><span id="recordEquipment" class="record-value"></span></div>
-                        <div class="record-box"><span class="record-label">Serial Number</span><span id="recordSerial" class="record-value"></span></div>
-                        <div class="record-box"><span class="record-label">Device ID</span><span id="recordDevice" class="record-value"></span></div>
-                        <div class="record-box"><span class="record-label">Station</span><span id="recordStation" class="record-value"></span></div>
-                        <div class="record-box"><span class="record-label">Current Location</span><span id="recordLocation" class="record-value"></span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <form id="movementForm" style="display:none;">
-            <section class="card">
-                <div class="card-header"><i class="fas fa-route"></i> New Movement</div>
-                <div class="card-body">
-                    <div class="movement-flow">
-                        <div class="location-card">
-                            <label class="form-label">From Location</label>
-                            <input id="fromLocation" class="form-control" readonly>
-                        </div>
-                        <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
-                        <div class="location-card to">
-                            <label class="form-label">To Location <span class="text-danger">*</span></label>
-                            <select id="toLocation" class="form-select" required>
-                                <option value="">-- Select New Location --</option>
-                                <optgroup label="Stores / AFC Locations">
-                                    <option value="STORE">Store</option>
-                                    <option value="AF-06 Alandur">AF-06 Alandur</option>
-                                    <option value="AF-06 Central">AF-06 Central</option>
-                                    <option value="AF-06 Thirumangalam">AF-06 Thirumangalam</option>
-                                </optgroup>
-                                <optgroup id="destinationStationsGroup" label="Stations">
-                                    <option value="SAP - AIRPORT">SAP - AIRPORT</option>
-                                    <option value="SME - MEENAMBAKKAM">SME - MEENAMBAKKAM</option>
-                                    <option value="SOT - NANGANALLUR ROAD">SOT - NANGANALLUR ROAD</option>
-                                    <option value="SAL - ARIGNAR ANNA ALANDUR METRO">SAL - ARIGNAR ANNA ALANDUR METRO</option>
-                                    <option value="SGU - GUINDY">SGU - GUINDY</option>
-                                    <option value="SLM - LITTLE MOUNT">SLM - LITTLE MOUNT</option>
-                                    <option value="SSA - SAIDAPET">SSA - SAIDAPET</option>
-                                    <option value="SCR - NANDANAM">SCR - NANDANAM</option>
-                                    <option value="STE - THENAMPET">STE - THENAMPET</option>
-                                    <option value="SGM - AG DMS">SGM - AG DMS</option>
-                                    <option value="STL - THOUSAND LIGHT">STL - THOUSAND LIGHT</option>
-                                    <option value="SLI - LIC">SLI - LIC</option>
-                                    <option value="SGE - GOVERNMENT ESTATE">SGE - GOVERNMENT ESTATE</option>
-                                    <option value="SCC - THALAIVAR DR. M.G. RAMACHANDRAN CENTRAL METRO">SCC - THALAIVAR DR. M.G. RAMACHANDRAN CENTRAL METRO</option>
-                                    <option value="SHC - HIGH COURT">SHC - HIGH COURT</option>
-                                    <option value="SMA - MANNADI">SMA - MANNADI</option>
-                                    <option value="SWA - WASHERMENPET">SWA - WASHERMENPET</option>
-                                    <option value="STC - THYAGARAYA COLLEGE">STC - THYAGARAYA COLLEGE</option>
-                                    <option value="STR - TONDIARPET">STR - TONDIARPET</option>
-                                    <option value="SNW - NEW WASHERMENPET">SNW - NEW WASHERMENPET</option>
-                                    <option value="STG - TOLL GATE">STG - TOLL GATE</option>
-                                    <option value="SKP - KALADIPET">SKP - KALADIPET</option>
-                                    <option value="STT - THIRUVOTRIYUR THERADI">STT - THIRUVOTRIYUR THERADI</option>
-                                    <option value="STV - THIRUVOTRIYUR">STV - THIRUVOTRIYUR</option>
-                                    <option value="SWN - WIMCO NAGAR">SWN - WIMCO NAGAR</option>
-                                    <option value="SWD - WIMCO NAGAR DEPOT">SWD - WIMCO NAGAR DEPOT</option>
-                                    <option value="SSI - EKKATTUTHANGAL">SSI - EKKATTUTHANGAL</option>
-                                    <option value="SAN - ASHOK NAGAR">SAN - ASHOK NAGAR</option>
-                                    <option value="SVA - VADAPALANI">SVA - VADAPALANI</option>
-                                    <option value="SAR - ARUMBAKKAM">SAR - ARUMBAKKAM</option>
-                                    <option value="SCM - PURATCHI THALAIVI DR. J. JAYALALITHAA CMBT METRO">SCM - PURATCHI THALAIVI DR. J. JAYALALITHAA CMBT METRO</option>
-                                    <option value="SKO - KOYAMBEDU">SKO - KOYAMBEDU</option>
-                                    <option value="STI - THIRUMANGALAM">STI - THIRUMANGALAM</option>
-                                    <option value="SAT - ANNA NAGAR TOWER">SAT - ANNA NAGAR TOWER</option>
-                                    <option value="SAE - ANNA NAGAR EAST">SAE - ANNA NAGAR EAST</option>
-                                    <option value="SSN - SHENOY NAGAR">SSN - SHENOY NAGAR</option>
-                                    <option value="SPC - PACHIAPPAS COLLEGE">SPC - PACHIAPPAS COLLEGE</option>
-                                    <option value="SKM - KILPAUK">SKM - KILPAUK</option>
-                                    <option value="SNP - NEHRU PARK">SNP - NEHRU PARK</option>
-                                    <option value="SEG - EGMORE">SEG - EGMORE</option>
-                                    <option value="SMM - ST. THOMAS MOUNT">SMM - ST. THOMAS MOUNT</option>
-                                </optgroup>
-                                <option value="OTHER">Other</option>
-                            </select>
-
-                            <div id="otherLocationWrap" class="mt-2" style="display:none;">
-                                <label class="form-label">Enter Other Location</label>
-                                <input id="otherLocation" class="form-control"
-                                       placeholder="Enter new location">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Movement Reason</label>
-                            <select id="movementReason" class="form-select">
-                                <option value="">-- Select Reason --</option>
-                                <option value="Installation">Installation</option>
-                                <option value="Fault Replacement">Fault Replacement</option>
-                                <option value="Repair">Repair</option>
-                                <option value="Return from Repair">Return from Repair</option>
-                                <option value="Inter-Station Transfer">Inter-Station Transfer</option>
-                                <option value="Store Issue">Store Issue</option>
-                                <option value="Store Return">Store Return</option>
-                                <option value="Vendor Movement">Vendor Movement</option>
-                                <option value="Testing">Testing</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Reference / TR / Ticket No.</label>
-                            <input id="referenceNo" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Moved By <span class="text-danger">*</span></label>
-                            <input id="movedBy" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Received By</label>
-                            <input id="receivedBy" class="form-control">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Remarks</label>
-                            <textarea id="remarks" class="form-control" rows="3"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <button id="moveBtn" type="submit" class="btn-main">
-                            <i class="fas fa-check-circle"></i> Save Movement and Update Location
-                        </button>
-                    </div>
-                </div>
-            </section>
-        </form>
-
-        <section id="historyCard" class="card" style="display:none;">
-            <div class="card-header"><i class="fas fa-history"></i> Movement History</div>
+            <div class="card-header"><i class="fas fa-users"></i> User Accounts</div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover history-table">
+                    <table class="table table-bordered table-hover user-table">
                         <thead>
                             <tr>
-                                <th>Date</th>
-                                <th>From</th>
-                                <th>To</th>
-                                <th>Reason</th>
-                                <th>Reference</th>
-                                <th>Moved By</th>
-                                <th>Received By</th>
-                                <th>Remarks</th>
+                                <th>User ID</th><th>Employee ID</th><th>Name</th><th>Email</th>
+                                <th>Role</th><th>Status</th><th>Last Login</th><th>Action</th>
                             </tr>
                         </thead>
-                        <tbody id="historyBody"></tbody>
+                        <tbody id="usersBody"></tbody>
                     </table>
                 </div>
             </div>
         </section>
     </main>
 
+    <div id="userModal" class="modal-overlay" onclick="closeOnBackdrop(event)">
+        <div class="modal-box">
+            <div class="modal-header-custom">
+                <h3 id="modalTitle"><i class="fas fa-user-plus"></i> Add User</h3>
+                <button class="modal-close" onclick="closeUserForm()">&times;</button>
+            </div>
+
+            <form id="userForm">
+                <div class="modal-body-custom">
+                    <input id="editMode" type="hidden" value="add">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">User ID *</label>
+                            <input id="userId" class="form-control" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Employee ID</label>
+                            <input id="employeeId" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Name *</label>
+                            <input id="name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input id="email" type="email" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Role *</label>
+                            <select id="role" class="form-select" required onchange="applyRolePermissions()">
+                                <option value="ADMIN">Admin</option>
+                                <option value="ENGINEER">Engineer</option>
+                                <option value="VIEWER">Viewer</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Status *</label>
+                            <select id="status" class="form-select">
+                                <option value="ACTIVE">Active</option>
+                                <option value="INACTIVE">Inactive</option>
+                            </select>
+                        </div>
+                        <div id="passwordWrap" class="col-md-6">
+                            <label class="form-label">Password *</label>
+                            <input id="password" type="password" class="form-control" minlength="8">
+                            <small class="text-muted">Minimum 8 characters.</small>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <label class="form-label">Permissions</label>
+                    <div id="permissionGrid" class="permission-grid"></div>
+                </div>
+
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn-secondary-custom" onclick="closeUserForm()">Cancel</button>
+                    <button id="saveBtn" type="submit" class="btn-success-custom">
+                        <i class="fas fa-save"></i> Save User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="../auth.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         "use strict";
 
-        const GOOGLE_SCRIPT_URL =
-            "https://script.google.com/macros/s/AKfycbyC1UQzxp4ikxVpBbg5D0TJDxx4AU-iEqh4Z9Cigeb0HAUzNYnQGihpPPKi7QDC2pgb4A/exec";
-
         const $ = id => document.getElementById(id);
-        let currentItem = null;
-        let currentResults = [];
-        let filteredAssetOptions = [];
+        let users = [];
+
+        const PERMISSIONS = [
+            ["dashboard","Dashboard"],["add_asset","Add Asset"],["search","Search"],
+            ["spare_movement","Spare Movement"],["spare_inventory","Spare Inventory"],
+            ["reports","Reports"],["users","User Control"],["settings","Settings"]
+        ];
+
+        const ROLE_DEFAULTS = {
+            ADMIN: PERMISSIONS.map(item => item[0]),
+            ENGINEER:["dashboard","add_asset","search","spare_movement","spare_inventory","reports"],
+            VIEWER:["dashboard","search","reports"]
+        };
 
         function escapeHtml(value) {
-            return String(value ?? "")
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+            return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;")
+                .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
         }
 
-        function showMessage(type, message) {
-            $("messageBox").innerHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show">
-                    ${escapeHtml(message)}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>`;
-            window.scrollTo({ top: 0, behavior: "smooth" });
+        function showMessage(type,message) {
+            $("messageBox").innerHTML = `<div class="alert alert-${type}">${escapeHtml(message)}</div>`;
         }
 
-        async function getJson(action, params = {}) {
-            const url = new URL(GOOGLE_SCRIPT_URL);
-            url.searchParams.set("action", action);
-            url.searchParams.set("_", Date.now());
-
-            Object.entries(params).forEach(([key, value]) => {
-                if (String(value || "").trim() !== "") url.searchParams.set(key, value);
+        async function post(payload) {
+            const response = await fetch(AFC_WEB_APP_URL,{
+                method:"POST",
+                headers:{"Content-Type":"text/plain;charset=utf-8"},
+                body:JSON.stringify(payload)
             });
-
-            const response = await fetch(url.toString(), { cache: "no-store", redirect: "follow" });
-            const text = await response.text();
-
-            let result;
-            try { result = JSON.parse(text); }
-            catch { throw new Error("Invalid Apps Script response. Redeploy the latest backend."); }
-
-            if (!result.success) throw new Error(result.error || "Request failed.");
+            const result = await response.json();
+            if(!result.success) throw new Error(result.error || "Request failed.");
             return result.data;
         }
 
-        async function postJson(payload) {
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                redirect: "follow",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(payload)
-            });
-
-            const text = await response.text();
-
-            let result;
-            try { result = JSON.parse(text); }
-            catch { throw new Error("Invalid Apps Script response. Redeploy the latest backend."); }
-
-            if (!result.success) throw new Error(result.error || "Request failed.");
-            return result.data;
-        }
-
-        async function searchItems() {
-            const systemType = $("systemType").value;
-
-            if (!systemType) {
-                showMessage("warning", "Please select a System Type.");
-                return;
-            }
-
+        async function loadUsers() {
             try {
-                $("searchBtn").disabled = true;
-                $("searchBtn").innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching';
-
-                currentResults = await getJson("searchMovableItems", {
-                    systemType,
-                    keyword: $("keyword").value.trim(),
-                    assetId: $("assetId").value,
-                    serialNumber: "",
-                    equipmentType: $("equipmentType").value,
-                    station: $("station").value,
-                    deviceId: ""
-                });
-
-                renderResults(Array.isArray(currentResults) ? currentResults : []);
-                $("resultsCard").style.display = "block";
-            } catch (error) {
-                showMessage("danger", error.message || "Search failed.");
-            } finally {
-                $("searchBtn").disabled = false;
-                $("searchBtn").innerHTML = '<i class="fas fa-search"></i> Search';
+                users = await post({action:"listUsers"});
+                renderUsers();
+            } catch(error) {
+                showMessage("danger",error.message);
             }
         }
 
-        function renderResults(results) {
-            $("resultCount").textContent =
-                `${results.length} matching item${results.length === 1 ? "" : "s"} found`;
-
-            if (!results.length) {
-                $("resultsBody").innerHTML = `
-                    <tr><td colspan="10" class="empty-state">No matching asset or spare found.</td></tr>`;
-                return;
-            }
-
-            $("resultsBody").innerHTML = results.map((item, index) => `
+        function renderUsers() {
+            $("usersBody").innerHTML = users.length ? users.map((user,index)=>`
                 <tr>
-                    <td><strong>${escapeHtml(item.itemId)}</strong></td>
-                    <td>${escapeHtml(item.itemType)}</td>
-                    <td>${escapeHtml(item.systemType)}</td>
-                    <td>${escapeHtml(item.equipmentType || "")}</td>
-                    <td>${escapeHtml(item.serialNumber || "")}</td>
-                    <td>${escapeHtml(item.deviceId || "")}</td>
-                    <td>${escapeHtml(item.station || "")}</td>
-                    <td>${escapeHtml(item.currentLocation || "")}</td>
-                    <td>${escapeHtml(item.status || "")}</td>
+                    <td><strong>${escapeHtml(user["User ID"])}</strong></td>
+                    <td>${escapeHtml(user["Employee ID"])}</td>
+                    <td>${escapeHtml(user["Name"])}</td>
+                    <td>${escapeHtml(user["Email"])}</td>
+                    <td>${escapeHtml(user["Role"])}</td>
+                    <td>${escapeHtml(user["Status"])}</td>
+                    <td>${escapeHtml(user["Last Login"])}</td>
                     <td>
-                        <button class="move-select-btn" onclick="selectItem(${index})">
-                            <i class="fas fa-exchange-alt"></i> Move
-                        </button>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <button class="btn-main btn-sm" onclick="editUser(${index})"><i class="fas fa-edit"></i></button>
+                            <button class="btn-secondary-custom btn-sm" onclick="resetPassword(${index})"><i class="fas fa-key"></i></button>
+                            <button class="btn-danger-custom btn-sm" onclick="deleteUserRecord(${index})"><i class="fas fa-trash"></i></button>
+                        </div>
                     </td>
-                </tr>`).join("");
+                </tr>`).join("") :
+                '<tr><td colspan="8" class="text-center text-muted">No users found.</td></tr>';
         }
 
-        async function selectItem(index) {
-            const selected = currentResults[index];
-            if (!selected) return;
-
-            try {
-                currentItem = await getJson("findMovableItem", { itemId: selected.itemId });
-
-                $("recordItemId").textContent = currentItem.itemId || "";
-                $("recordItemType").textContent = currentItem.itemType || "";
-                $("recordSystem").textContent = currentItem.systemType || "";
-                $("recordEquipment").textContent = currentItem.equipmentType || "";
-                $("recordSerial").textContent = currentItem.serialNumber || selected.serialNumber || "";
-                $("recordDevice").textContent = selected.deviceId || "";
-                $("recordStation").textContent = selected.station || "";
-                $("recordLocation").textContent = currentItem.currentLocation || "";
-                $("fromLocation").value = currentItem.currentLocation || "";
-                $("serialNumber").value = currentItem.serialNumber || selected.serialNumber || "";
-                $("deviceId").value = selected.deviceId || "";
-                $("selectedStatus").value = selected.status || "";
-                $("selectedCurrentLocation").value = currentItem.currentLocation || "";
-
-                $("selectedCard").style.display = "block";
-                $("movementForm").style.display = "block";
-
-                await loadMovementHistory(currentItem.itemId);
-
-                $("selectedCard").scrollIntoView({ behavior: "smooth", block: "start" });
-            } catch (error) {
-                showMessage("danger", error.message || "Unable to load selected item.");
-            }
+        function renderPermissions(selected=[]) {
+            $("permissionGrid").innerHTML = PERMISSIONS.map(([value,label])=>`
+                <label class="permission-item">
+                    <input type="checkbox" class="permission-check" value="${value}"
+                           ${selected.includes(value) ? "checked" : ""}>
+                    ${escapeHtml(label)}
+                </label>`).join("");
         }
 
-        async function loadMovementHistory(itemId) {
-            try {
-                const history = await getJson("getMovementHistory", { itemId });
-                renderHistory(Array.isArray(history) ? history : []);
-                $("historyCard").style.display = "block";
-            } catch {
-                renderHistory([]);
-                $("historyCard").style.display = "block";
-            }
+        function applyRolePermissions() {
+            renderPermissions(ROLE_DEFAULTS[$("role").value] || []);
         }
 
-        function renderHistory(history) {
-            if (!history.length) {
-                $("historyBody").innerHTML =
-                    '<tr><td colspan="8" class="empty-state">No previous movement recorded.</td></tr>';
-                return;
-            }
-
-            $("historyBody").innerHTML = history.map(record => `
-                <tr>
-                    <td>${escapeHtml(formatDate(record["Movement Date"]))}</td>
-                    <td>${escapeHtml(record["From Location"] || "")}</td>
-                    <td><strong>${escapeHtml(record["To Location"] || "")}</strong></td>
-                    <td>${escapeHtml(record["Movement Reason"] || "")}</td>
-                    <td>${escapeHtml(record["Reference No"] || "")}</td>
-                    <td>${escapeHtml(record["Moved By"] || "")}</td>
-                    <td>${escapeHtml(record["Received By"] || "")}</td>
-                    <td>${escapeHtml(record["Remarks"] || "")}</td>
-                </tr>`).join("");
+        function selectedPermissions() {
+            return [...document.querySelectorAll(".permission-check:checked")].map(input=>input.value);
         }
 
-        function formatDate(value) {
-            if (!value) return "";
-            const date = new Date(value);
-            return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString();
+        function openUserForm() {
+            $("editMode").value="add";
+            $("modalTitle").innerHTML='<i class="fas fa-user-plus"></i> Add User';
+            $("userForm").reset();
+            $("userId").disabled=false;
+            $("passwordWrap").style.display="block";
+            $("password").required=true;
+            $("role").value="VIEWER";
+            $("status").value="ACTIVE";
+            applyRolePermissions();
+            $("userModal").classList.add("show");
+            document.body.style.overflow="hidden";
         }
 
-        function resetSearch() {
-            $("systemType").value = "";
-            $("station").innerHTML = '<option value="">-- All Stations --</option>';
-            $("equipmentType").innerHTML = '<option value="">-- All Equipment --</option>';
-            $("assetId").innerHTML = '<option value="">-- Select Asset / Spare --</option>';
-            $("station").disabled = true;
-            $("equipmentType").disabled = true;
-            $("assetId").disabled = true;
-            $("serialNumber").value = "";
-            $("deviceId").value = "";
-            $("selectedStatus").value = "";
-            $("selectedCurrentLocation").value = "";
-            $("keyword").value = "";
-            $("toLocation").value = "";
-            $("otherLocation").value = "";
-            $("otherLocation").required = false;
-            $("otherLocationWrap").style.display = "none";
-
-            currentResults = [];
-            filteredAssetOptions = [];
-            currentItem = null;
-
-            $("resultsCard").style.display = "none";
-            $("selectedCard").style.display = "none";
-            $("movementForm").style.display = "none";
-            $("historyCard").style.display = "none";
+        function editUser(index) {
+            const user=users[index];
+            if(!user) return;
+            $("editMode").value="update";
+            $("modalTitle").innerHTML='<i class="fas fa-user-edit"></i> Edit User';
+            $("userId").value=user["User ID"] || "";
+            $("employeeId").value=user["Employee ID"] || "";
+            $("name").value=user["Name"] || "";
+            $("email").value=user["Email"] || "";
+            $("role").value=user["Role"] || "VIEWER";
+            $("status").value=user["Status"] || "ACTIVE";
+            $("userId").disabled=true;
+            $("passwordWrap").style.display="none";
+            $("password").required=false;
+            renderPermissions(String(user["Permissions"] || "").split(",").map(x=>x.trim()).filter(Boolean));
+            $("userModal").classList.add("show");
+            document.body.style.overflow="hidden";
         }
 
-
-        function updateDestinationStations(stations) {
-            // Master CMRL station list is fixed in the HTML.
-            // Dynamic data will not overwrite it.
+        function closeUserForm() {
+            $("userModal").classList.remove("show");
+            document.body.style.overflow="";
         }
 
-        function getSelectedDestination() {
-            const selected = $("toLocation").value;
-
-            if (selected === "OTHER") {
-                return $("otherLocation").value.trim();
-            }
-
-            return selected;
+        function closeOnBackdrop(event) {
+            if(event.target.id==="userModal") closeUserForm();
         }
 
-        $("toLocation").addEventListener("change", () => {
-            const isOther = $("toLocation").value === "OTHER";
-
-            $("otherLocationWrap").style.display = isOther ? "block" : "none";
-            $("otherLocation").required = isOther;
-
-            if (!isOther) {
-                $("otherLocation").value = "";
-            }
-        });
-
-        $("movementForm").addEventListener("submit", async event => {
+        $("userForm").addEventListener("submit",async event=>{
             event.preventDefault();
-
-            if (!currentItem) {
-                showMessage("warning", "Please select an item first.");
-                return;
-            }
-
-            const toLocation = getSelectedDestination();
-            const movedBy = $("movedBy").value.trim();
-
-            if (!toLocation || !movedBy) {
-                showMessage("warning", "Please select/enter To Location and provide Moved By.");
-                return;
-            }
-
-            if (!confirm(`Move ${currentItem.itemId} to "${toLocation}"?`)) return;
-
             try {
-                $("moveBtn").disabled = true;
-                $("moveBtn").innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving';
-
-                const result = await postJson({
-                    action: "moveItem",
-                    itemId: currentItem.itemId,
-                    toLocation,
-                    movementReason: $("movementReason").value,
-                    referenceNo: $("referenceNo").value.trim(),
-                    movedBy,
-                    receivedBy: $("receivedBy").value.trim(),
-                    remarks: $("remarks").value.trim()
-                });
-
-                showMessage(
-                    "success",
-                    `${result.itemId} moved from "${result.fromLocation || "Not saved"}" to "${result.toLocation}".`
-                );
-
-                $("toLocation").value = "";
-                $("otherLocation").value = "";
-                $("otherLocation").required = false;
-                $("otherLocationWrap").style.display = "none";
-                $("movementReason").value = "";
-                $("referenceNo").value = "";
-                $("movedBy").value = "";
-                $("receivedBy").value = "";
-                $("remarks").value = "";
-
-                await searchItems();
-
-                const refreshedIndex = currentResults.findIndex(
-                    item => String(item.itemId).toUpperCase() === String(result.itemId).toUpperCase()
-                );
-
-                if (refreshedIndex >= 0) await selectItem(refreshedIndex);
-            } catch (error) {
-                showMessage("danger", error.message || "Movement could not be saved.");
+                $("saveBtn").disabled=true;
+                const mode=$("editMode").value;
+                const payload={
+                    action:mode==="add" ? "addUser" : "updateUser",
+                    userId:$("userId").value.trim(),
+                    employeeId:$("employeeId").value.trim(),
+                    name:$("name").value.trim(),
+                    email:$("email").value.trim(),
+                    role:$("role").value,
+                    status:$("status").value,
+                    permissions:selectedPermissions()
+                };
+                if(mode==="add") payload.password=$("password").value;
+                const result=await post(payload);
+                showMessage("success",result.message);
+                closeUserForm();
+                await loadUsers();
+            } catch(error) {
+                showMessage("danger",error.message);
             } finally {
-                $("moveBtn").disabled = false;
-                $("moveBtn").innerHTML =
-                    '<i class="fas fa-check-circle"></i> Save Movement and Update Location';
+                $("saveBtn").disabled=false;
             }
         });
 
-        async function loadSystemFilters() {
-            const systemType = $("systemType").value;
-
-            $("station").innerHTML = '<option value="">-- All Stations --</option>';
-            $("equipmentType").innerHTML = '<option value="">-- All Equipment --</option>';
-            $("assetId").innerHTML = '<option value="">-- Select Asset / Spare --</option>';
-            $("station").disabled = true;
-            $("equipmentType").disabled = true;
-            $("assetId").disabled = true;
-            clearSelectedAssetFields();
-
-            if (!systemType) return;
-
+        async function resetPassword(index) {
+            const user=users[index];
+            if(!user) return;
+            const password=prompt(`Enter new password for ${user["User ID"]} (minimum 8 characters):`);
+            if(password===null) return;
             try {
-                // Use the already-supported search action and create dropdown
-                // values directly from the returned asset records.
-                const systemItems = await getJson("searchMovableItems", {
-                    systemType
-                });
-
-                const items = Array.isArray(systemItems) ? systemItems : [];
-
-                const stations = [...new Set(
-                    items
-                        .map(item => String(item.station || item.currentLocation || "").trim())
-                        .filter(Boolean)
-                )].sort((a, b) => a.localeCompare(b));
-
-                const equipmentTypes = [...new Set(
-                    items
-                        .map(item => String(item.equipmentType || "").trim())
-                        .filter(Boolean)
-                )].sort((a, b) => a.localeCompare(b));
-
-                populateSelect(
-                    $("station"),
-                    stations,
-                    "-- All Stations --"
-                );
-
-                populateSelect(
-                    $("equipmentType"),
-                    equipmentTypes,
-                    "-- All Equipment --"
-                );
-
-                updateDestinationStations(stations);
-
-                $("station").disabled = false;
-                $("equipmentType").disabled = false;
-
-                filteredAssetOptions = items;
-                populateAssetSelect(items);
-            } catch (error) {
-                console.error("Dropdown loading error:", error);
-                showMessage(
-                    "danger",
-                    error.message ||
-                    "Unable to load dropdown values. Redeploy the latest Apps Script backend."
-                );
+                const result=await post({action:"resetPassword",userId:user["User ID"],newPassword:password});
+                showMessage("success",result.message);
+            } catch(error) {
+                showMessage("danger",error.message);
             }
         }
 
-        async function loadAssetDropdown() {
-            const systemType = $("systemType").value;
-            if (!systemType) return;
-
+        async function deleteUserRecord(index) {
+            const user=users[index];
+            if(!user || !confirm(`Delete user ${user["User ID"]}?`)) return;
             try {
-                const items = await getJson("searchMovableItems", {
-                    systemType,
-                    station: $("station").value,
-                    equipmentType: $("equipmentType").value
-                });
-
-                filteredAssetOptions = Array.isArray(items) ? items : [];
-                populateAssetSelect(filteredAssetOptions);
-                clearSelectedAssetFields();
-            } catch (error) {
-                console.error("Asset dropdown error:", error);
-                showMessage("danger", error.message || "Unable to load assets.");
+                const result=await post({action:"deleteUser",userId:user["User ID"]});
+                showMessage("success",result.message);
+                await loadUsers();
+            } catch(error) {
+                showMessage("danger",error.message);
             }
         }
 
-        function populateAssetSelect(items) {
-            $("assetId").innerHTML =
-                '<option value="">-- Select Asset / Spare --</option>' +
-                (items || []).map(item => {
-                    const extra = item.serialNumber
-                        ? ` - ${escapeHtml(item.serialNumber)}`
-                        : (item.deviceId ? ` - ${escapeHtml(item.deviceId)}` : "");
-
-                    return `
-                        <option value="${escapeHtml(item.itemId)}">
-                            ${escapeHtml(item.itemId)}${extra}
-                        </option>`;
-                }).join("");
-
-            $("assetId").disabled = false;
-        }
-
-        async function handleAssetSelection() {
-            const itemId = $("assetId").value;
-            clearSelectedAssetFields();
-
-            if (!itemId) return;
-
-            const selected = (filteredAssetOptions || []).find(
-                item => String(item.itemId) === String(itemId)
-            );
-
-            if (!selected) return;
-
-            $("serialNumber").value = selected.serialNumber || "";
-            $("deviceId").value = selected.deviceId || "";
-            $("selectedStatus").value = selected.status || "";
-            $("selectedCurrentLocation").value = selected.currentLocation || "";
-
-            const index = currentResults.findIndex(
-                item => String(item.itemId) === String(itemId)
-            );
-
-            if (index >= 0) {
-                await selectItem(index);
-                return;
-            }
-
-            currentResults = [selected];
-            await selectItem(0);
-        }
-
-        function clearSelectedAssetFields() {
-            $("serialNumber").value = "";
-            $("deviceId").value = "";
-            $("selectedStatus").value = "";
-            $("selectedCurrentLocation").value = "";
-        }
-
-        function populateSelect(select, values, placeholder) {
-            const unique = [...new Set(values.filter(Boolean))];
-
-            select.innerHTML =
-                `<option value="">${escapeHtml(placeholder)}</option>` +
-                unique.map(value =>
-                    `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`
-                ).join("");
-        }
-
-        $("systemType").addEventListener("change", loadSystemFilters);
-        $("station").addEventListener("change", loadAssetDropdown);
-        $("equipmentType").addEventListener("change", loadAssetDropdown);
-        $("assetId").addEventListener("change", handleAssetSelection);
-
-        $("keyword").addEventListener("keydown", event => {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                searchItems();
+        document.addEventListener("DOMContentLoaded",async()=>{
+            const allowed=await AFCAuth.requirePermission("users");
+            if(allowed) {
+                renderPermissions(ROLE_DEFAULTS.VIEWER);
+                loadUsers();
             }
         });
     </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            await AFCAuth.requirePermission("spare_movement");
-        });
-    </script>
-
 </body>
 </html>
