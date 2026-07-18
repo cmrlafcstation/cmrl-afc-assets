@@ -573,6 +573,160 @@
         .asset-detail-edit { color: #fff; background: var(--primary-blue); }
         .asset-detail-cancel { color: #333; background: #e9ecef; }
 
+
+        .station-group {
+            margin-bottom: 24px;
+            border: 1px solid #e3e8ef;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .station-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            color: #ffffff;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+        }
+
+        .station-group-header h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .station-group-count {
+            min-width: 30px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            text-align: center;
+            background: rgba(255,255,255,.2);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .station-group-body {
+            padding: 15px;
+        }
+
+        .station-group-body .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .group-ag .station-group-header { background: linear-gradient(135deg, #0c5460, #117a8b); }
+        .group-tom .station-group-header { background: linear-gradient(135deg, #155724, #218838); }
+        .group-efo .station-group-header { background: linear-gradient(135deg, #856404, #b58b00); }
+        .group-other .station-group-header { background: linear-gradient(135deg, #5a6268, #343a40); }
+
+
+        /* Compact search result cards */
+        #resultsContent {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .result-item {
+            margin: 0;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+        }
+
+        .result-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 9px rgba(0,0,0,0.12);
+        }
+
+        .result-header {
+            margin-bottom: 8px;
+            padding-bottom: 7px;
+        }
+
+        .result-title {
+            font-size: 15px;
+            line-height: 1.2;
+        }
+
+        .result-system-badge {
+            padding: 4px 8px;
+            font-size: 10px;
+        }
+
+        .result-details {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 7px 10px;
+            margin-bottom: 9px;
+        }
+
+        .detail-label {
+            margin-bottom: 2px;
+            font-size: 9px;
+            letter-spacing: .25px;
+        }
+
+        .detail-value {
+            font-size: 12px;
+            line-height: 1.25;
+        }
+
+        .result-footer {
+            padding-top: 8px;
+        }
+
+        .result-status {
+            padding: 4px 8px;
+            font-size: 10px;
+        }
+
+        .result-actions {
+            gap: 5px;
+        }
+
+        .btn-action {
+            padding: 5px 8px;
+            font-size: 10px;
+            border-radius: 4px;
+        }
+
+        .station-group {
+            grid-column: 1 / -1;
+            margin-bottom: 14px;
+        }
+
+        .station-group-header {
+            padding: 10px 14px;
+        }
+
+        .station-group-header h4 {
+            font-size: 14px;
+        }
+
+        .station-group-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            padding: 12px;
+        }
+
+        .station-group-body .result-item {
+            height: 100%;
+        }
+
+        @media (max-width: 600px) {
+            #resultsContent,
+            .station-group-body {
+                grid-template-columns: 1fr;
+            }
+
+            .result-details {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -765,6 +919,9 @@
         const upper = value => text(value).toUpperCase();
 
         document.addEventListener("DOMContentLoaded", async () => {
+            const allowed = await AFCAuth.requirePermission("search");
+            if (!allowed) return;
+
             setupEventListeners();
             await loadAllAssets();
 
@@ -808,18 +965,87 @@
         }
 
         async function requestJson(url, options = {}) {
-            const response = await fetch(url, options);
+            const token = localStorage.getItem("afc_auth_token") || "";
+            const method = String(options.method || "GET").toUpperCase();
+            let requestUrl = url;
+            const requestOptions = { ...options };
+
+            if (!token) {
+                redirectToLogin();
+                throw new Error("LOGIN_REQUIRED");
+            }
+
+            if (method === "GET") {
+                const parsedUrl = new URL(requestUrl);
+                parsedUrl.searchParams.set("token", token);
+                requestUrl = parsedUrl.toString();
+            } else {
+                let payload = {};
+
+                try {
+                    payload = requestOptions.body
+                        ? JSON.parse(requestOptions.body)
+                        : {};
+                } catch (_) {
+                    payload = {};
+                }
+
+                payload.token = token;
+
+                requestOptions.headers = {
+                    ...(requestOptions.headers || {}),
+                    "Content-Type": "text/plain;charset=utf-8"
+                };
+                requestOptions.body = JSON.stringify(payload);
+            }
+
+            const response = await fetch(requestUrl, requestOptions);
             const body = await response.text();
             let data;
+
             try {
                 data = JSON.parse(body);
             } catch (_) {
-                throw new Error("Google Apps Script returned an invalid response. Redeploy the web app with access set to Anyone.");
+                throw new Error(
+                    "Google Apps Script returned an invalid response. " +
+                    "Redeploy the web app with access set to Anyone."
+                );
             }
+
+            const errorMessage =
+                data?.error ||
+                data?.message ||
+                `Request failed (${response.status}).`;
+
+            if (
+                errorMessage === "LOGIN_REQUIRED" ||
+                errorMessage === "SESSION_EXPIRED"
+            ) {
+                localStorage.removeItem("afc_auth_token");
+                localStorage.removeItem("afc_auth_user");
+                redirectToLogin();
+                throw new Error("Your login session has expired. Please log in again.");
+            }
+
+            if (errorMessage === "ACCESS_DENIED") {
+                throw new Error("You do not have permission to search assets.");
+            }
+
             if (!response.ok || data?.success === false) {
-                throw new Error(data?.error || data?.message || `Request failed (${response.status}).`);
+                throw new Error(errorMessage);
             }
+
             return data;
+        }
+
+        function redirectToLogin() {
+            const currentPage =
+                window.location.pathname +
+                window.location.search;
+
+            window.location.replace(
+                `../index.html?return=${encodeURIComponent(currentPage)}`
+            );
         }
 
         async function loadAllAssets(showMessage = false) {
@@ -864,12 +1090,42 @@
             return direct;
         }
 
+        function parseLocationDetails(systemType, location) {
+            const value = text(location).trim();
+            const match = value.match(/^(TOM|EFO)\s*[- ]?\s*(\d+)$/i);
+
+            if (match) {
+                return {
+                    locationType: match[1].toUpperCase(),
+                    locationNumber: match[2],
+                    displayLocation: `${match[1].toUpperCase()}-${match[2]}`
+                };
+            }
+
+            if (upper(systemType) === "AG") {
+                return {
+                    locationType: "AG",
+                    locationNumber: "",
+                    displayLocation: value
+                };
+            }
+
+            return {
+                locationType: value ? "OTHER" : "",
+                locationNumber: "",
+                displayLocation: value
+            };
+        }
+
         function normalizeAsset(row) {
             const systemType = normalizeSystemType(getField(row, "systemType", "System Type", "type"), row);
             const station = getField(row, "station", "Station", "Station Name", "stationCode", "Station Code");
             const equipmentType = systemType === "AG"
                 ? getField(row, "equipmentType", "Equipment Type") || "Automatic Gate"
                 : getField(row, "equipmentType", "Equipment Type", "Equipment Name");
+
+            const rawLocation = text(getField(row, "location", "Location"));
+            const locationDetails = parseLocationDetails(systemType, rawLocation);
 
             return {
                 ...row,
@@ -881,7 +1137,9 @@
                 status: upper(getField(row, "status", "Status")) || "N/A",
                 manufacturer: text(getField(row, "manufacturer", "Manufacturer")),
                 model: text(getField(row, "model", "Model")),
-                location: text(getField(row, "location", "Location")),
+                location: locationDetails.displayLocation,
+                locationType: locationDetails.locationType,
+                locationNumber: locationDetails.locationNumber,
                 installDate: text(getField(row, "installDate", "Install Date", "Installation Date")),
                 remarks: text(getField(row, "remarks", "Remarks", "Remark"))
             };
@@ -927,6 +1185,77 @@
             return upper(value).toLowerCase().replace(/[^a-z0-9_-]/g, "");
         }
 
+        function resultCardHtml(asset, index) {
+            const status = asset.status || "N/A";
+            const statusClass = ["ACTIVE", "WORKING", "HEALTHY"].includes(upper(status))
+                ? "status-active"
+                : upper(status).includes("MAINT")
+                    ? "status-maintenance"
+                    : "status-inactive";
+
+            const locationLabel =
+                asset.locationType === "TOM" ? `TOM No. ${asset.locationNumber}` :
+                asset.locationType === "EFO" ? `EFO No. ${asset.locationNumber}` :
+                asset.location || "N/A";
+
+            return `
+                <div class="result-item" data-index="${index}" onclick="showDetail(${index})">
+                    <div class="result-header">
+                        <h5 class="result-title">${escapeHtml(asset.assetId || "N/A")}</h5>
+                        <span class="result-system-badge badge-${safeClass(asset.systemType)}">
+                            ${escapeHtml(asset.systemType || "N/A")}
+                        </span>
+                    </div>
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Equipment Type</span>
+                            <span class="detail-value">${escapeHtml(asset.equipmentType || "N/A")}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Serial / Device Number</span>
+                            <span class="detail-value">${escapeHtml(asset.serialNumber || "N/A")}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Station</span>
+                            <span class="detail-value">${escapeHtml(asset.station || "N/A")}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Location</span>
+                            <span class="detail-value">${escapeHtml(locationLabel)}</span>
+                        </div>
+                    </div>
+                    <div class="result-footer">
+                        <span class="result-status ${statusClass}">${escapeHtml(status)}</span>
+                        <div class="result-actions">
+                            <button type="button" class="btn-action"
+                                    onclick="event.stopPropagation(); editAsset(${index})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button type="button" class="btn-action"
+                                    onclick="event.stopPropagation(); deleteAsset(${index})"
+                                    style="background-color:#dc3545">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function stationGroupHtml(title, className, entries) {
+            if (!entries.length) return "";
+
+            return `
+                <section class="station-group ${className}">
+                    <div class="station-group-header">
+                        <h4>${escapeHtml(title)}</h4>
+                        <span class="station-group-count">${entries.length}</span>
+                    </div>
+                    <div class="station-group-body">
+                        ${entries.map(entry => resultCardHtml(entry.asset, entry.index)).join("")}
+                    </div>
+                </section>`;
+        }
+
         function displayResults() {
             const container = $("resultsContainer");
             const content = $("resultsContent");
@@ -935,38 +1264,46 @@
             $("noSearch").style.display = "none";
             container.style.display = "block";
             $("exportBtn").style.display = searchResults.length ? "inline-flex" : "none";
-            $("resultsInfo").innerHTML = `<strong>${searchResults.length}</strong> result${searchResults.length === 1 ? "" : "s"} found from <strong>${allAssets.length}</strong> assets`;
+            $("resultsInfo").innerHTML =
+                `<strong>${searchResults.length}</strong> result${searchResults.length === 1 ? "" : "s"} ` +
+                `found from <strong>${allAssets.length}</strong> assets`;
 
             if (!searchResults.length) {
-                content.innerHTML = '<div class="no-results"><i class="fas fa-inbox" style="font-size:48px;opacity:.3;margin-bottom:15px;display:block"></i><p>No assets match your search criteria.</p></div>';
+                content.innerHTML =
+                    '<div class="no-results"><i class="fas fa-inbox" ' +
+                    'style="font-size:48px;opacity:.3;margin-bottom:15px;display:block"></i>' +
+                    '<p>No assets match your search criteria.</p></div>';
                 return;
             }
 
-            content.innerHTML = searchResults.map((asset, index) => {
-                const status = asset.status || "N/A";
-                const statusClass = ["ACTIVE", "WORKING", "HEALTHY"].includes(upper(status)) ? "status-active" :
-                    upper(status).includes("MAINT") ? "status-maintenance" : "status-inactive";
+            const stationSelected = Boolean($("station")?.value);
 
-                return `
-                    <div class="result-item" data-index="${index}" onclick="showDetail(${index})">
-                        <div class="result-header">
-                            <h5 class="result-title">${escapeHtml(asset.assetId || "N/A")}</h5>
-                            <span class="result-system-badge badge-${safeClass(asset.systemType)}">${escapeHtml(asset.systemType || "N/A")}</span>
-                        </div>
-                        <div class="result-details">
-                            <div class="detail-item"><span class="detail-label">Equipment Type</span><span class="detail-value">${escapeHtml(asset.equipmentType || "N/A")}</span></div>
-                            <div class="detail-item"><span class="detail-label">Serial / Device Number</span><span class="detail-value">${escapeHtml(asset.serialNumber || "N/A")}</span></div>
-                            <div class="detail-item"><span class="detail-label">Station</span><span class="detail-value">${escapeHtml(asset.station || "N/A")}</span></div>
-                        </div>
-                        <div class="result-footer">
-                            <span class="result-status ${statusClass}">${escapeHtml(status)}</span>
-                            <div class="result-actions">
-                                <button type="button" class="btn-action" onclick="event.stopPropagation(); editAsset(${index})"><i class="fas fa-edit"></i> Edit</button>
-                                <button type="button" class="btn-action" onclick="event.stopPropagation(); deleteAsset(${index})" style="background-color:#dc3545"><i class="fas fa-trash"></i> Delete</button>
-                            </div>
-                        </div>
-                    </div>`;
-            }).join("");
+            if (!stationSelected) {
+                content.innerHTML = searchResults
+                    .map((asset, index) => resultCardHtml(asset, index))
+                    .join("");
+                return;
+            }
+
+            const indexed = searchResults.map((asset, index) => ({ asset, index }));
+            const ag = indexed.filter(entry => entry.asset.systemType === "AG");
+            const tom = indexed.filter(entry =>
+                ["QR", "NCMC"].includes(entry.asset.systemType) &&
+                entry.asset.locationType === "TOM"
+            );
+            const efo = indexed.filter(entry =>
+                ["QR", "NCMC"].includes(entry.asset.systemType) &&
+                entry.asset.locationType === "EFO"
+            );
+            const other = indexed.filter(entry =>
+                !ag.includes(entry) && !tom.includes(entry) && !efo.includes(entry)
+            );
+
+            content.innerHTML =
+                stationGroupHtml("Automatic Gates (AG)", "group-ag", ag) +
+                stationGroupHtml("TOM Equipment", "group-tom", tom) +
+                stationGroupHtml("EFO Equipment", "group-efo", efo) +
+                stationGroupHtml("Other Equipment", "group-other", other);
         }
 
         function showDetail(index) {
@@ -1009,6 +1346,8 @@
                 ["Serial Number", asset.serialNumber],
                 ["Manufacturer", asset.manufacturer],
                 ["Model", asset.model],
+                ["Location Type", asset.locationType],
+                ["TOM / EFO Number", asset.locationNumber],
                 ["Location", asset.location],
                 ["Install Date", asset.installDate],
                 ["Remarks", asset.remarks]
@@ -1158,12 +1497,8 @@
         }
     </script>
 
-
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            await AFCAuth.requirePermission("search");
-        });
+        document.addEventListener("DOMContentLoaded", () => AFCAuth.requirePermission("search"));
     </script>
-
 </body>
 </html>
