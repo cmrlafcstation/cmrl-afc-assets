@@ -768,9 +768,32 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div id="qrNcmcLocationBlock" class="col-md-6" style="display:none;">
+                            <label class="form-label">Location <span class="required">*</span></label>
+                            <select id="locationType" class="form-select">
+                                <option value="">-- Select Location --</option>
+                                <option value="TOM">TOM</option>
+                                <option value="EFO">EFO</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+
+                            <div id="locationNumberWrap" class="mt-2" style="display:none;">
+                                <label class="form-label" id="locationNumberLabel">No. of TOM / EFO</label>
+                                <input type="number" id="locationNumber" class="form-control"
+                                       min="1" step="1" placeholder="Example: 1">
+                            </div>
+
+                            <div id="otherAssetLocationWrap" class="mt-2" style="display:none;">
+                                <label class="form-label">Enter Other Location</label>
+                                <input type="text" id="otherAssetLocation" class="form-control"
+                                       placeholder="Enter location">
+                            </div>
+                        </div>
+
+                        <div id="genericLocationBlock" class="col-md-6">
                             <label class="form-label">Location</label>
-                            <input type="text" id="location" class="form-control" placeholder="e.g., Thermal Receipt Printer">
+                            <input type="text" id="location" class="form-control"
+                                   placeholder="Enter equipment location">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Manufacturer</label>
@@ -1370,25 +1393,11 @@
         }
 
         async function postJson(payload) {
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
+            const result = await authenticatedRequest(GOOGLE_SCRIPT_URL, {
                 method: &quot;POST&quot;,
                 redirect: &quot;follow&quot;,
-                headers: { &quot;Content-Type&quot;: &quot;text/plain;charset=utf-8&quot; },
                 body: JSON.stringify(payload)
             });
-
-            const text = await response.text();
-            let result;
-
-            try {
-                result = JSON.parse(text);
-            } catch {
-                throw new Error(&quot;Invalid response from Apps Script. Deploy the latest Code.gs version.&quot;);
-            }
-
-            if (!result.success) {
-                throw new Error(result.error || &quot;Import failed.&quot;);
-            }
 
             return result.data || {};
         }
@@ -1502,9 +1511,103 @@
     </div>
 
     <script src="../auth.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const allowed = await AFCAuth.requirePermission("add_asset");
+            if (!allowed) return;
+        });
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         "use strict";
+
+
+        async function authenticatedRequest(url, options = {}) {
+            const token = localStorage.getItem("afc_auth_token") || "";
+            const method = String(options.method || "GET").toUpperCase();
+            let requestUrl = url;
+            const requestOptions = { ...options };
+
+            if (!token) {
+                redirectToLogin();
+                throw new Error("LOGIN_REQUIRED");
+            }
+
+            if (method === "GET") {
+                const parsedUrl = new URL(requestUrl);
+                parsedUrl.searchParams.set("token", token);
+                requestUrl = parsedUrl.toString();
+            } else {
+                let payload = {};
+
+                try {
+                    payload = requestOptions.body
+                        ? JSON.parse(requestOptions.body)
+                        : {};
+                } catch (_) {
+                    payload = {};
+                }
+
+                payload.token = token;
+
+                requestOptions.headers = {
+                    ...(requestOptions.headers || {}),
+                    "Content-Type": "text/plain;charset=utf-8"
+                };
+                requestOptions.body = JSON.stringify(payload);
+            }
+
+            const response = await fetch(requestUrl, requestOptions);
+            const text = await response.text();
+            let result;
+
+            try {
+                result = JSON.parse(text);
+            } catch (_) {
+                throw new Error(
+                    "Google Apps Script returned an invalid response. " +
+                    "Redeploy the latest Apps Script version."
+                );
+            }
+
+            const errorMessage =
+                result?.error ||
+                result?.message ||
+                `Request failed (${response.status}).`;
+
+            if (
+                errorMessage === "LOGIN_REQUIRED" ||
+                errorMessage === "SESSION_EXPIRED"
+            ) {
+                localStorage.removeItem("afc_auth_token");
+                localStorage.removeItem("afc_auth_user");
+                redirectToLogin();
+                throw new Error("Your login session has expired. Please log in again.");
+            }
+
+            if (errorMessage === "ACCESS_DENIED") {
+                throw new Error("You do not have permission to add or edit assets.");
+            }
+
+            if (!response.ok || result?.success === false) {
+                throw new Error(errorMessage);
+            }
+
+            return result;
+        }
+
+        function redirectToLogin() {
+            const currentPage =
+                window.location.pathname +
+                window.location.search;
+
+            window.location.replace(
+                `../index.html?return=${encodeURIComponent(currentPage)}`
+            );
+        }
+
+
 
 
         function showAssetMode(mode) {
@@ -1531,8 +1634,8 @@
             AG: ["Automatic Gate"],
             NCMC: ["Printer", "EDC Device", "EDC Device Base", "POS Device", "POS Device and Base", "Ticket Reader", "Cash Counter", "Barcode Scanner", "Passenger Display Unit", "Charger adapter", "Counter Communication Set", "Adapter", "Charger", "Other"],
             QR: ["Touch Display", "QR Printer", "QR Scanner", "Cash Counter", "Adapter", "Charger", "Other"],
-            PINELAB: ["POS Device", "EDC Device", "Charger", "Adapter", "Other"],
-            TVM: ["Ticket Vending Machine", "Card Reader", "Coin Acceptor", "Note Acceptor", "Thermal Printer", "Display", "Charger", "Adapter", "Other"]
+            PINELAB: ["Pinelab QR"],
+            TVM: ["TVM", "AVM"]
         };
 
         const sheetMapping = {
@@ -1558,6 +1661,11 @@
         const equipmentTypeSelect = $("equipmentType");
         const agSection = $("agSection");
         const equipmentDetailsSection = $("equipmentDetailsSection");
+        const qrNcmcLocationBlock = $("qrNcmcLocationBlock");
+        const genericLocationBlock = $("genericLocationBlock");
+        const locationTypeSelect = $("locationType");
+        const locationNumberWrap = $("locationNumberWrap");
+        const otherAssetLocationWrap = $("otherAssetLocationWrap");
         const submitBtn = $("submitBtn");
 
         function hideAlerts() {
@@ -1576,24 +1684,61 @@
         }
 
         function populateEquipmentTypes(systemType) {
-            equipmentTypeSelect.innerHTML = '<option value="">-- Select Equipment Type --</option>';
-            (equipmentTypes[systemType] || []).forEach((type) => {
+            equipmentTypeSelect.disabled = false;
+            equipmentTypeSelect.innerHTML =
+                '<option value="">-- Select Equipment Type --</option>';
+
+            const options = equipmentTypes[systemType] || [];
+
+            options.forEach((type) => {
                 const option = document.createElement("option");
                 option.value = type;
                 option.textContent = type;
                 equipmentTypeSelect.appendChild(option);
             });
 
+            // Preserve existing AG auto-selection.
             if (systemType === "AG") {
                 equipmentTypeSelect.value = "Automatic Gate";
+            }
+
+            // Pinelab has only one valid equipment type.
+            if (systemType === "PINELAB") {
+                equipmentTypeSelect.value = "Pinelab QR";
+                equipmentTypeSelect.disabled = true;
             }
         }
 
         function updateSystemSections() {
             const systemType = valueOf("systemType");
+            const isQrOrNcmc = systemType === "QR" || systemType === "NCMC";
+
             populateEquipmentTypes(systemType);
             agSection.classList.toggle("active", systemType === "AG");
-            equipmentDetailsSection.classList.toggle("active", Boolean(systemType) && systemType !== "AG");
+            equipmentDetailsSection.classList.toggle(
+                "active",
+                Boolean(systemType) && systemType !== "AG"
+            );
+
+            if (qrNcmcLocationBlock) {
+                qrNcmcLocationBlock.style.display = isQrOrNcmc ? "block" : "none";
+            }
+
+            if (genericLocationBlock) {
+                genericLocationBlock.style.display =
+                    Boolean(systemType) && systemType !== "AG" && !isQrOrNcmc
+                        ? "block"
+                        : "none";
+            }
+
+            if (!isQrOrNcmc) {
+                if (locationTypeSelect) locationTypeSelect.value = "";
+                if ($("locationNumber")) $("locationNumber").value = "";
+                if ($("otherAssetLocation")) $("otherAssetLocation").value = "";
+                if (locationNumberWrap) locationNumberWrap.style.display = "none";
+                if (otherAssetLocationWrap) otherAssetLocationWrap.style.display = "none";
+            }
+
             resetConditionalFields();
         }
 
@@ -1607,6 +1752,62 @@
                     if (!show && input) input.value = "";
                 });
             });
+        }
+
+        function updateLocationFields() {
+            const type = valueOf("locationType");
+            const showNumber = type === "TOM" || type === "EFO";
+            const showOther = type === "OTHER";
+
+            if (locationNumberWrap) {
+                locationNumberWrap.style.display = showNumber ? "block" : "none";
+            }
+
+            if (otherAssetLocationWrap) {
+                otherAssetLocationWrap.style.display = showOther ? "block" : "none";
+            }
+
+            const label = $("locationNumberLabel");
+            if (label) {
+                label.textContent =
+                    type === "TOM" ? "No. of TOM" :
+                    type === "EFO" ? "No. of EFO" :
+                    "No. of TOM / EFO";
+            }
+
+            if (!showNumber && $("locationNumber")) {
+                $("locationNumber").value = "";
+            }
+
+            if (!showOther && $("otherAssetLocation")) {
+                $("otherAssetLocation").value = "";
+            }
+        }
+
+        function getEquipmentLocation(systemType) {
+            if (systemType === "QR" || systemType === "NCMC") {
+                const type = valueOf("locationType");
+
+                if (type === "TOM" || type === "EFO") {
+                    const number = valueOf("locationNumber");
+                    if (!number) {
+                        throw new Error(`Please enter the No. of ${type}.`);
+                    }
+                    return `${type}-${number}`;
+                }
+
+                if (type === "OTHER") {
+                    const other = valueOf("otherAssetLocation");
+                    if (!other) {
+                        throw new Error("Please enter the other location.");
+                    }
+                    return other;
+                }
+
+                throw new Error("Please select TOM, EFO, or Other as the location.");
+            }
+
+            return valueOf("location");
         }
 
         function validateFormData(systemType, equipmentType, assetId, station) {
@@ -1657,7 +1858,7 @@
             } else {
                 Object.assign(formData, {
                     "Equipment Type": equipmentType,
-                    Location: valueOf("location"),
+                    Location: getEquipmentLocation(systemType),
                     "Serial Number": valueOf("serialNumber"),
                     Manufacturer: valueOf("manufacturer"),
                     Model: valueOf("model"),
@@ -1671,26 +1872,11 @@
         }
 
         async function saveAsset(formData) {
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
+            return await authenticatedRequest(GOOGLE_SCRIPT_URL, {
                 method: "POST",
                 redirect: "follow",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(formData)
             });
-
-            const responseText = await response.text();
-            let result;
-            try {
-                result = JSON.parse(responseText);
-            } catch (parseError) {
-                throw new Error("Invalid response from Google Apps Script. Redeploy the web app and verify access is set to Anyone.");
-            }
-
-            if (!result.success) {
-                throw new Error(result.error || "Failed to save the asset.");
-            }
-
-            return result;
         }
 
         function showSuccess(systemType) {
@@ -1718,6 +1904,9 @@
         }
 
         systemTypeSelect.addEventListener("change", updateSystemSections);
+        if (locationTypeSelect) {
+            locationTypeSelect.addEventListener("change", updateLocationFields);
+        }
         setupConditionalRadio("entryScanner", "entryScannerIdField", "entryScannerID");
         setupConditionalRadio("exitScanner", "exitScannerIdField", "exitScannerID");
         setupConditionalRadio("entryReader", "entryReaderIdField", "entryReaderID");
@@ -1754,12 +1943,5 @@
             }
         });
     </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            await AFCAuth.requirePermission("add_asset");
-        });
-    </script>
-
 </body>
 </html>
