@@ -1,8 +1,19 @@
-/* Custom CMRL Theme Palette Settings */
+/* =========================================================
+   CMRL AFC Asset Management - Custom Theme
+   File: css/cmrl-theme.css
+   ========================================================= */
+
 :root {
     --cmrl-blue: #0056b3;
     --cmrl-active-blue: #0062cc;
+    --cmrl-text-blue: #1a5ca8;
+    --cmrl-success: #198754;
+    --cmrl-sidebar-width: 220px;
 }
+
+/* =========================================================
+   Utility Colours
+   ========================================================= */
 
 .bg-primary-cmrl {
     background-color: var(--cmrl-blue) !important;
@@ -13,72 +24,171 @@
 }
 
 .text-cmrl-blue {
-    color: #1a5ca8;
+    color: var(--cmrl-text-blue) !important;
 }
 
-/* Hover effects for Sidebar Menu options */
+/* =========================================================
+   Sidebar
+   ========================================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--cmrl-sidebar-width);
+    height: 100vh;
+    overflow-y: auto;
+    padding-top: 20px;
+    background-color: var(--cmrl-blue);
+    color: #ffffff;
+    z-index: 1000;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.12);
+}
+
+.sidebar-header {
+    margin-bottom: 30px;
+    padding: 0 15px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar .nav-link,
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 14px 20px;
+    color: #ffffff !important;
+    text-decoration: none;
+    border-left: 4px solid transparent;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        padding-left 0.2s ease;
+}
+
+.sidebar .nav-link:hover,
 .sidebar-link:hover {
+    padding-left: 24px;
     background-color: rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
 }
 
-/* Card custom styling overrides */
+.sidebar .nav-link.active,
+.sidebar-link.active {
+    background-color: var(--cmrl-active-blue) !important;
+    border-left-color: #ffc107;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* =========================================================
+   Main Content
+   ========================================================= */
+
+.main-content {
+    min-height: 100vh;
+    margin-left: var(--cmrl-sidebar-width);
+    padding: 20px;
+}
+
+/* =========================================================
+   Cards
+   ========================================================= */
+
 .card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 0;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 .5rem 1rem rgba(0,0,0,0.08)!important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.08) !important;
 }
-/* Subtle table action row buttons adjustments */
+
+/* =========================================================
+   Tables
+   ========================================================= */
+
 .table th {
-    font-weight: 600;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
     color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.table td {
+    vertical-align: middle;
 }
 
 .table tbody tr {
     transition: background-color 0.15s ease-in-out;
 }
 
-/* Fix input shadows in modals */
-.form-control:focus, .form-select:focus {
-    border-color: #0056b3;
+.table tbody tr:hover {
+    background-color: rgba(0, 86, 179, 0.04);
+}
+
+/* =========================================================
+   Forms
+   ========================================================= */
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--cmrl-blue);
     box-shadow: 0 0 0 0.25rem rgba(0, 86, 179, 0.15);
 }
-/* Custom highlight styles for matrix filtering blocks */
+
+/* =========================================================
+   Matrix / Filter Selection
+   ========================================================= */
+
 .active-station-item {
-    background-color: rgba(0, 86, 179, 0.08) !important;
     color: var(--cmrl-blue) !important;
     font-weight: 600;
+    background-color: rgba(0, 86, 179, 0.08) !important;
     border-left: 4px solid var(--cmrl-blue) !important;
 }
 
 .active-eq-item {
-    background-color: rgba(25, 135, 84, 0.08) !important;
-    color: #198754 !important;
+    color: var(--cmrl-success) !important;
     font-weight: 600;
-    border-left: 4px solid #198754 !important;
+    background-color: rgba(25, 135, 84, 0.08) !important;
+    border-left: 4px solid var(--cmrl-success) !important;
 }
 
-.tracking-wider {
-    letter-spacing: 0.8px;
-    font-size: 0.75rem;
-}
-/* Navigation pills adjustments inside movement component panel */
+/* =========================================================
+   Spare Movement Tabs
+   ========================================================= */
+
 #movementTab .nav-link {
-    border-radius: 6px;
     margin: 2px;
+    border-radius: 6px;
     color: rgba(255, 255, 255, 0.75) !important;
 }
 
+#movementTab .nav-link:hover {
+    color: #ffffff !important;
+}
+
 #movementTab .nav-link.active {
-    background-color: #ffffff !important;
     color: var(--cmrl-blue) !important;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================================
+   Helpers
+   ========================================================= */
+
+.tracking-wider {
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
 }
 
 .sticky-top {
@@ -86,32 +196,45 @@
     top: 0;
     z-index: 10;
 }
-.tracking-wider {
-    letter-spacing: 1.5px;
-    font-size: 0.8rem;
+
+/* =========================================================
+   Responsive Layout
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-height: none;
+        padding-top: 12px;
+    }
+
+    .sidebar-header {
+        margin-bottom: 10px;
+    }
+
+    .sidebar .nav-link,
+    .sidebar-link {
+        padding: 12px 16px;
+    }
+
+    .sidebar .nav-link:hover,
+    .sidebar-link:hover {
+        padding-left: 20px;
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .card:hover {
+        transform: none;
+    }
 }
-:root {
-    --cmrl-blue: #0056b3; /* The exact blue from your image */
-}
-.sidebar {
-    width: 220px;
-    height: 100vh;
-    background-color: var(--cmrl-blue);
-    position: fixed;
-    color: white;
-    padding-top: 20px;
-}
-.main-content {
-    margin-left: 220px; /* This pushes content to the right of the sidebar */
-    padding: 20px;
-}
-.nav-link {
-    color: white !important;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-}
-.nav-link:hover, .nav-link.active {
-    background-color: rgba(255,255,255,0.1);
-}
-.sidebar-header { text-align: center; margin-bottom: 30px; }
